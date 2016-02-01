@@ -50,7 +50,7 @@ public class CMDPlayer implements CommandExecutor {
 		
 		Player player = optionalPlayer.get();
 
-		if(src instanceof Player && !((Player) src).equals(player) && !src.hasPermission("ChatManager.cmd.tag.player.others")){
+		if(src instanceof Player && !((Player) src).equals(player) && !src.hasPermission("simpletags.cmd.tag.player.others")){
 			src.sendMessage(Text.of(TextColors.DARK_RED, "You only have permission to tag yourself!"));
 			return CommandResult.empty();
 		}
