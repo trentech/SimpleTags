@@ -12,6 +12,7 @@ import org.spongepowered.api.event.world.LoadWorldEvent;
 import org.spongepowered.api.plugin.PluginContainer;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.Text.Builder;
+import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.serializer.TextSerializers;
 import org.spongepowered.api.world.World;
 
@@ -32,18 +33,20 @@ public class EventListener {
 		}
 		Text message = TextSerializers.FORMATTING_CODE.deserialize(": " + optionalMessage.get().toPlain().substring(optionalMessage.get().toPlain().indexOf(" ") + 1));
 
-		Text playerTag = Text.EMPTY;
 		Text worldTag = Text.EMPTY;
+		
 		Builder groupTagBuilder = Text.builder();
+
+		Builder playerTag = Text.builder().onHover(TextActions.showText(Text.of(player.getName())));
 
 		Optional<PlayerTag> optionalPlayerTag = PlayerTag.get(player);
 		
 		if(!optionalPlayerTag.isPresent()){
-			playerTag = DefaultTag.get(player).get().getTag();
+			playerTag.append(DefaultTag.get(player).get().getTag());
 		}else{
-			playerTag = PlayerTag.get(player).get().getTag();	
+			playerTag.append(PlayerTag.get(player).get().getTag());
 		}
-				
+
 		worldTag = WorldTag.get(player.getWorld()).get().getTag();
 
 		for(GroupTag groupTag : GroupTag.all()){
@@ -56,7 +59,7 @@ public class EventListener {
 			groupTagBuilder.append(groupTag.getTag());
 		}
 
-    	event.setMessage(Text.of(worldTag, groupTagBuilder.build(), playerTag, message));
+    	event.setMessage(Text.of(worldTag, groupTagBuilder.build(), playerTag.build(), message));
 	}
 	
 	@Listener
