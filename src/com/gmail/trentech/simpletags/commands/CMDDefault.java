@@ -12,6 +12,7 @@ import org.spongepowered.api.service.pagination.PaginationBuilder;
 import org.spongepowered.api.service.pagination.PaginationService;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.text.serializer.TextSerializers;
 
 import com.gmail.trentech.simpletags.Main;
 import com.gmail.trentech.simpletags.tags.DefaultTag;
@@ -35,13 +36,14 @@ public class CMDDefault implements CommandExecutor {
 			pages.contents(list);
 			pages.sendTo(src);
 			
-			return CommandResult.empty();
+			return CommandResult.success();
 		}
 		String tag = args.<String>getOne("tag").get();
 		
 		defaultTag.setTag(tag);
 
-		src.sendMessage(Text.of(TextColors.DARK_GREEN, "Tag Changed!"));
+		src.sendMessage(Text.of(TextColors.DARK_GREEN, "Tag changed to ", TextSerializers.FORMATTING_CODE.deserialize(tag)));
+		
 		return CommandResult.success();
 	}
 

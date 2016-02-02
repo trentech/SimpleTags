@@ -55,14 +55,9 @@ public class CommandManager {
 		    .executor(new CMDBroadcast())
 		    .build();
 
-	private CommandSpec cmdTagReload = CommandSpec.builder()
-		    .permission("simpletags.cmd.tag.reload")
-		    .executor(new CMDReload())
-		    .build();
-	
 	public CommandSpec getCmd(){
 		Builder tagBuilder = CommandSpec.builder().permission("simpletags.cmd.tag").child(cmdTagGroup, "group", "g").child(cmdTagWorld, "world", "w")
-			    .child(cmdTagPlayer, "player", "p").child(cmdTagServer, "server", "s").child(cmdTagReload, "reload", "r").executor(new CMDTag());
+			    .child(cmdTagPlayer, "player", "p").child(cmdTagServer, "server", "s").executor(new CMDTag());
 		
 		Optional<PluginContainer> plugin = Main.getGame().getPluginManager().getPlugin("SimpleChat");
 		

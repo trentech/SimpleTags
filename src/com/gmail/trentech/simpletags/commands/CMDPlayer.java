@@ -14,6 +14,7 @@ import org.spongepowered.api.service.pagination.PaginationBuilder;
 import org.spongepowered.api.service.pagination.PaginationService;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.text.serializer.TextSerializers;
 
 import com.gmail.trentech.simpletags.Main;
 import com.gmail.trentech.simpletags.tags.DefaultTag;
@@ -75,7 +76,7 @@ public class CMDPlayer implements CommandExecutor {
 			pages.contents(list);
 			pages.sendTo(src);
 			
-			return CommandResult.empty();
+			return CommandResult.success();
 		}
 
 		String tag = args.<String>getOne("tag").get();
@@ -84,7 +85,7 @@ public class CMDPlayer implements CommandExecutor {
 			if(optionalPlayerTag.isPresent()){
 				optionalPlayerTag.get().delete();
 			}
-			src.sendMessage(Text.of(TextColors.DARK_GREEN, "Tag Reset!"));
+			src.sendMessage(Text.of(TextColors.DARK_GREEN, "Tag reset"));
 			
 			return CommandResult.success();
 		}
@@ -92,10 +93,10 @@ public class CMDPlayer implements CommandExecutor {
 		if(optionalPlayerTag.isPresent()){
 			optionalPlayerTag.get().setTag(tag);
 		}else{
-			new PlayerTag(player, DefaultTag.get(player).get().getTag());
+			new PlayerTag(player, TextSerializers.FORMATTING_CODE.deserialize(tag));
 		}
 
-		src.sendMessage(Text.of(TextColors.DARK_GREEN, "Tag Changed!"));
+		src.sendMessage(Text.of(TextColors.DARK_GREEN, "Tag changed to ", TextSerializers.FORMATTING_CODE.deserialize(tag)));
 		
 		return CommandResult.success();
 	}

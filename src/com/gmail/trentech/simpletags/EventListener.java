@@ -1,6 +1,9 @@
 package com.gmail.trentech.simpletags;
 
+import java.util.List;
+import java.util.Map.Entry;
 import java.util.Optional;
+import java.util.Set;
 
 import org.spongepowered.api.command.source.ConsoleSource;
 import org.spongepowered.api.entity.living.player.Player;
@@ -8,13 +11,13 @@ import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.command.SendCommandEvent;
 import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.event.message.MessageChannelEvent;
-import org.spongepowered.api.event.world.LoadWorldEvent;
 import org.spongepowered.api.plugin.PluginContainer;
+import org.spongepowered.api.service.context.Context;
+import org.spongepowered.api.service.permission.Subject;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.Text.Builder;
 import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.serializer.TextSerializers;
-import org.spongepowered.api.world.World;
 
 import com.gmail.trentech.simpletags.tags.ConsoleTag;
 import com.gmail.trentech.simpletags.tags.DefaultTag;
@@ -47,16 +50,21 @@ public class EventListener {
 			playerTag.append(PlayerTag.get(player).get().getTag());
 		}
 
-		worldTag = WorldTag.get(player.getWorld()).get().getTag();
+		Optional<WorldTag> optionalWorldTag = WorldTag.get(player.getWorld());
+		
+		if(optionalWorldTag.isPresent()){
+			worldTag = WorldTag.get(player.getWorld()).get().getTag();
+		}
 
-		for(GroupTag groupTag : GroupTag.all()){
-			String group = groupTag.getName();
-			
-			if(!player.hasPermission("simpletags.group." + group)){
-				continue;
+		for(Entry<Set<Context>, List<Subject>> parent : player.getSubjectData().getAllParents().entrySet()){
+			for(Subject subject : parent.getValue()){
+				String group = subject.getIdentifier();
+				Optional<GroupTag> optionalGroupTag = GroupTag.get(group);
+				
+				if(optionalGroupTag.isPresent()){
+					groupTagBuilder.append(optionalGroupTag.get().getTag());
+				}			
 			}
-			
-			groupTagBuilder.append(groupTag.getTag());
 		}
 
     	event.setMessage(Text.of(worldTag, groupTagBuilder.build(), playerTag.build(), message));
@@ -82,15 +90,5 @@ public class EventListener {
 		
 		event.setCancelled(true);
 	}
-	
-	@Listener
-	public void onLoadWorldEvent(LoadWorldEvent event){
-		World world = event.getTargetWorld();
-		
-		Optional<WorldTag> optionalWorldTag = WorldTag.get(world);
-		
-		if(!optionalWorldTag.isPresent()){
-			new WorldTag(world, "&b[" + world.getName() + "]");
-		}
-	}
+
 }

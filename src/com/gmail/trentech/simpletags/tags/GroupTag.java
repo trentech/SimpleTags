@@ -4,8 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import org.spongepowered.api.scheduler.Task;
@@ -67,31 +65,7 @@ public class GroupTag extends SQLUtils {
 		
 		return optionalGroupTag;
 	}
-	
-	public static List<GroupTag> all(){
-		List<GroupTag> list = new ArrayList<>();
 
-		try {
-		    Connection connection = getDataSource().getConnection();
-		    
-		    PreparedStatement statement = connection.prepareStatement("SELECT * FROM Groups");
-		    
-			ResultSet result = statement.executeQuery();
-			
-			while (result.next()) {
-				String name = result.getString("Name");
-				String tag = result.getString("Tag");
-
-		    	list.add(new GroupTag(name, tag, true));
-			}
-			connection.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		
-		return list;
-	}
-	
 	private void save(){
 		try {
 		    Connection connection = getDataSource().getConnection();

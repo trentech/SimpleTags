@@ -14,6 +14,7 @@ import org.spongepowered.api.service.pagination.PaginationBuilder;
 import org.spongepowered.api.service.pagination.PaginationService;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.text.serializer.TextSerializers;
 import org.spongepowered.api.world.World;
 
 import com.gmail.trentech.simpletags.Main;
@@ -25,7 +26,7 @@ public class CMDWorld implements CommandExecutor {
 	public CMDWorld(){
 		Help help = new Help("world", "world", " View and edit world tags");
 		help.setSyntax(" /tag world <world> <tag>\n /t w <world> <tag>");
-		help.setExample(" /tag world DIM-1\n /tag world DIM-1 &4[NETHER]\n /tag world @w &6[MyWorld]");
+		help.setExample(" /tag world DIM-1\n /tag world DIM-1 &4[NETHER]\n /tag world @w &6[MyWorld]\n /tag world world reset");
 		help.save();
 	}
 	
@@ -49,7 +50,7 @@ public class CMDWorld implements CommandExecutor {
     	}
     	World world = optionalWorld.get();
 
-    	WorldTag worldTag = WorldTag.get(world).get();
+    	Optional<WorldTag> optionalWorldTag = WorldTag.get(world);
     	
 		if(!args.hasAny("tag")) {
 			PaginationBuilder pages = Main.getGame().getServiceManager().provide(PaginationService.class).get().builder();
@@ -58,19 +59,37 @@ public class CMDWorld implements CommandExecutor {
 			
 			List<Text> list = new ArrayList<>();
 
-			list.add(Text.of(TextColors.AQUA, "Current Tag: ", worldTag.getTag()));
+			if(optionalWorldTag.isPresent()){
+				list.add(Text.of(TextColors.AQUA, "Current Tag: ", optionalWorldTag.get().getTag()));	
+			}else{
+				list.add(Text.of(TextColors.AQUA, "Current Tag: ", TextColors.RED, "NONE"));
+			}
+			
 			list.add(Text.of(TextColors.AQUA, "Update Tag: ", TextColors.GREEN, "/tag world <world> <tag>"));
 			
 			pages.contents(list);
 			pages.sendTo(src);
 			
-			return CommandResult.empty();
+			return CommandResult.success();
 		}
 		String tag = args.<String>getOne("tag").get();
 		
-		worldTag.setTag(tag);
+		if(tag.equalsIgnoreCase("reset")){
+			if(optionalWorldTag.isPresent()){
+				optionalWorldTag.get().delete();
+			}
+			src.sendMessage(Text.of(TextColors.DARK_GREEN, "Tag reset"));
+			
+			return CommandResult.success();
+		}
+		
+		if(optionalWorldTag.isPresent()){
+			optionalWorldTag.get().setTag(tag);
+		}else{
+			new WorldTag(world, tag);
+		}
 
-		src.sendMessage(Text.of(TextColors.DARK_GREEN, "Tag Changed!"));
+		src.sendMessage(Text.of(TextColors.DARK_GREEN, "Tag changed to ", TextSerializers.FORMATTING_CODE.deserialize(tag)));
 		
 		return CommandResult.success();
 	}
