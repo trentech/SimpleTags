@@ -59,6 +59,11 @@ public class EventListener {
 		for(Entry<Set<Context>, List<Subject>> parent : player.getSubjectData().getAllParents().entrySet()){
 			for(Subject subject : parent.getValue()){
 				String group = subject.getIdentifier();
+				
+				if(group.equalsIgnoreCase("op_0") || group.equalsIgnoreCase("op_1") || group.equalsIgnoreCase("op_2") || group.equalsIgnoreCase("op_3") || group.equalsIgnoreCase("op_4")){
+					 group = "op";
+				}
+				
 				Optional<GroupTag> optionalGroupTag = GroupTag.get(group);
 				
 				if(optionalGroupTag.isPresent()){

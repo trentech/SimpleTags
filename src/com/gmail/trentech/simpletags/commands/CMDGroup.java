@@ -45,10 +45,14 @@ public class CMDGroup implements CommandExecutor {
 		for(Subject subject : permissionService.getGroupSubjects().getAllSubjects()){
 			String group = subject.getIdentifier();
 
+			if(group.equalsIgnoreCase("op_0") || group.equalsIgnoreCase("op_1") || group.equalsIgnoreCase("op_2") || group.equalsIgnoreCase("op_3") || group.equalsIgnoreCase("op_4")){
+				 group = "op";
+			}
+			
 			if(name.equalsIgnoreCase(group)){
 				groupExist = true;
 				break;
-			}		
+			}
 		}
 		
     	if(!groupExist){
