@@ -17,7 +17,10 @@ import com.gmail.trentech.simpletags.tags.DefaultTag;
 import com.gmail.trentech.simpletags.utils.Resource;
 import com.gmail.trentech.simpletags.utils.SQLUtils;
 
-@Plugin(id = Resource.ID, name = Resource.NAME, version = Resource.VERSION)
+import me.flibio.updatifier.Updatifier;
+
+@Updatifier(repoName = Resource.ID, repoOwner = "TrenTech", version = Resource.VERSION)
+@Plugin(id = Resource.ID, name = Resource.NAME, version = Resource.VERSION, dependencies = "after: Updatifier")
 public class Main {
 
 	private static Game game;
