@@ -9,7 +9,7 @@ import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
-import org.spongepowered.api.service.pagination.PaginationBuilder;
+import org.spongepowered.api.service.pagination.PaginationList.Builder;
 import org.spongepowered.api.service.pagination.PaginationService;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
@@ -45,7 +45,7 @@ public class CMDChannel implements CommandExecutor {
     	ChannelTag channelTag = optionalChannelTag.get();
 
 		if(!args.hasAny("tag")) {
-			PaginationBuilder pages = Main.getGame().getServiceManager().provide(PaginationService.class).get().builder();
+			Builder pages = Main.getGame().getServiceManager().provide(PaginationService.class).get().builder();
 
 			pages.title(Text.builder().color(TextColors.DARK_GREEN).append(Text.of(TextColors.AQUA, "Group")).build());
 			

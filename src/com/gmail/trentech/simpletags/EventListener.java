@@ -29,12 +29,9 @@ public class EventListener {
 
 	@Listener
 	public void onMessageChannelEventChat(MessageChannelEvent.Chat event, @First Player player){
-		Optional<Text> optionalMessage = event.getOriginalMessage();
-		
-		if(!optionalMessage.isPresent()){
-			return;
-		}
-		Text message = TextSerializers.FORMATTING_CODE.deserialize(": " + optionalMessage.get().toPlain().substring(optionalMessage.get().toPlain().indexOf(" ") + 1));
+		String messageOrig = event.getOriginalMessage().toPlain();
+
+		Text message = TextSerializers.FORMATTING_CODE.deserialize(": " + messageOrig.substring(messageOrig.indexOf(" ") + 1));
 
 		Text worldTag = Text.EMPTY;
 		
