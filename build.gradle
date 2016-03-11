@@ -26,17 +26,8 @@ configurations {
     compile.extendsFrom shade
 }
 
-sourceSets {
-  api.java.srcDir 'api'
-  main {
-    java.srcDir 'src'
-    compileClasspath += api.output
-  }
-}
-
 dependencies {
     compile "org.spongepowered:spongeapi:4.1.0-SNAPSHOT"
-    compile "com.github.trentech:SimpleTags:0.2.4"
 	shade "com.github.Flibio:Updatifier:-SNAPSHOT:api"
 }
 
