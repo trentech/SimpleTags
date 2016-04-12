@@ -11,12 +11,15 @@ import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.command.SendCommandEvent;
 import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.event.message.MessageChannelEvent;
+import org.spongepowered.api.event.message.MessageEvent.MessageFormatter;
 import org.spongepowered.api.plugin.PluginContainer;
 import org.spongepowered.api.service.context.Context;
 import org.spongepowered.api.service.permission.Subject;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.Text.Builder;
+import org.spongepowered.api.text.TextTemplate;
 import org.spongepowered.api.text.action.TextActions;
+import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.serializer.TextSerializers;
 
 import com.gmail.trentech.simpletags.tags.ConsoleTag;
@@ -29,10 +32,10 @@ public class EventListener {
 
 	@Listener
 	public void onMessageChannelEventChat(MessageChannelEvent.Chat event, @First Player player){
-		String messageOrig = event.getOriginalMessage().toPlain();
+		String messageOrig = event.getFormatter().getBody().toText().toPlain();
 
-		Text message = TextSerializers.FORMATTING_CODE.deserialize(": " + messageOrig.substring(messageOrig.indexOf(" ") + 1));
-
+		Text message = TextSerializers.FORMATTING_CODE.deserialize(messageOrig);
+		
 		Text worldTag = Text.EMPTY;
 		
 		Builder groupTagBuilder = Text.builder();
@@ -68,8 +71,11 @@ public class EventListener {
 				}			
 			}
 		}
-
-    	event.setMessage(Text.of(worldTag, groupTagBuilder.build(), playerTag.build(), message));
+		
+		MessageFormatter formatter = event.getFormatter();
+		
+		formatter.setHeader(TextTemplate.of(worldTag, groupTagBuilder.build(), playerTag.build(), TextColors.RESET, ": "));
+		formatter.setBody(TextTemplate.of(message));
 	}
 	
 	@Listener
