@@ -59,7 +59,7 @@ public class CommandManager {
 		Builder tagBuilder = CommandSpec.builder().permission("simpletags.cmd.tag").child(cmdTagGroup, "group", "g").child(cmdTagWorld, "world", "w")
 			    .child(cmdTagPlayer, "player", "p").child(cmdTagServer, "server", "s").executor(new CMDTag());
 		
-		Optional<PluginContainer> plugin = Main.getGame().getPluginManager().getPlugin("SimpleChat");
+		Optional<PluginContainer> plugin = Main.getGame().getPluginManager().getPlugin("com.gmail.trentech.simplechat");
 		
 		if(plugin.isPresent()){
 			tagBuilder.child(cmdTagBroadcast, "broadcast", "b").child(cmdTagChannel, "channel", "c");

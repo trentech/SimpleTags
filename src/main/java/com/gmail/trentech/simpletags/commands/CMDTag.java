@@ -50,7 +50,7 @@ public class CMDTag implements CommandExecutor {
 					.onClick(TextActions.executeCallback(Help.getHelp("world"))).append(Text.of(" /tag world")).build());
 		}
 		
-		Optional<PluginContainer> plugin = Main.getGame().getPluginManager().getPlugin("SimpleChat");
+		Optional<PluginContainer> plugin = Main.getGame().getPluginManager().getPlugin("com.gmail.trentech.simplechat");
 		
 		if(plugin.isPresent()){
 			if(src.hasPermission("simpletags.cmd.tag.broadcast")) {
