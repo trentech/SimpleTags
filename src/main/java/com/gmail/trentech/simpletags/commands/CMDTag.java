@@ -37,10 +37,6 @@ public class CMDTag implements CommandExecutor {
 			list.add(Text.builder().color(TextColors.GREEN).onHover(TextActions.showText(Text.of("Click command for more information ")))
 					.onClick(TextActions.executeCallback(Help.getHelp("player"))).append(Text.of(" /tag player")).build());
 		}
-		if(src.hasPermission("simpletags.cmd.tag.reload")) {
-			list.add(Text.builder().color(TextColors.GREEN).onHover(TextActions.showText(Text.of("Click command for more information ")))
-					.onClick(TextActions.executeCallback(Help.getHelp("reload"))).append(Text.of(" /tag reload")).build());
-		}
 		if(src.hasPermission("simpletags.cmd.tag.server")) {
 			list.add(Text.builder().color(TextColors.GREEN).onHover(TextActions.showText(Text.of("Click command for more information ")))
 					.onClick(TextActions.executeCallback(Help.getHelp("server"))).append(Text.of(" /tag server")).build());

@@ -13,7 +13,7 @@ import com.gmail.trentech.simpletags.Main;
 public class CommandManager {
 
 	private CommandSpec cmdTagDefault = CommandSpec.builder()
-		    .permission("simpletags.cmd.tag.player")
+		    .permission("simpletags.cmd.tag.player.default")
 		    .arguments(GenericArguments.optional(GenericArguments.string(Text.of("tag"))))
 		    .executor(new CMDDefault())
 		    .build();
