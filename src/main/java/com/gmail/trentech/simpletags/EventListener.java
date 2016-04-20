@@ -8,6 +8,7 @@ import java.util.Set;
 import org.spongepowered.api.command.source.ConsoleSource;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.command.SendCommandEvent;
 import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.event.message.MessageChannelEvent;
@@ -30,16 +31,8 @@ import com.gmail.trentech.simpletags.tags.WorldTag;
 
 public class EventListener {
 
-	@Listener
+	@Listener(order = Order.EARLY)
 	public void onMessageChannelEventChat(MessageChannelEvent.Chat event, @First Player player){
-		String messageOrig = event.getFormatter().getBody().toText().toPlain();
-
-		Text message = TextSerializers.FORMATTING_CODE.deserialize(messageOrig);
-		
-		Text worldTag = Text.EMPTY;
-		
-		Builder groupTagBuilder = Text.builder();
-
 		Builder playerTag = Text.builder().onHover(TextActions.showText(Text.of(player.getName())));
 
 		Optional<PlayerTag> optionalPlayerTag = PlayerTag.get(player);
@@ -50,12 +43,16 @@ public class EventListener {
 			playerTag.append(PlayerTag.get(player).get().getTag());
 		}
 
+		Text worldTag = Text.EMPTY;
+		
 		Optional<WorldTag> optionalWorldTag = WorldTag.get(player.getWorld());
 		
 		if(optionalWorldTag.isPresent()){
 			worldTag = WorldTag.get(player.getWorld()).get().getTag();
 		}
 
+		Builder groupTagBuilder = Text.builder();
+		
 		for(Entry<Set<Context>, List<Subject>> parent : player.getSubjectData().getAllParents().entrySet()){
 			for(Subject subject : parent.getValue()){
 				String group = subject.getIdentifier();
@@ -75,6 +72,9 @@ public class EventListener {
 		MessageFormatter formatter = event.getFormatter();
 		
 		formatter.setHeader(TextTemplate.of(worldTag, groupTagBuilder.build(), playerTag.build(), TextColors.RESET, ": "));
+		
+		String messageOrig = TextSerializers.FORMATTING_CODE.serialize(event.getFormatter().getBody().toText());
+		Text message = TextSerializers.FORMATTING_CODE.deserialize(messageOrig);
 		formatter.setBody(TextTemplate.of(message));
 	}
 	
@@ -85,7 +85,7 @@ public class EventListener {
 			return;
 		}
 		
-		Optional<PluginContainer> plugin = Main.getGame().getPluginManager().getPlugin("SimpleChat");
+		Optional<PluginContainer> plugin = Main.getGame().getPluginManager().getPlugin("com.gmail.trentech.simplechat");
 		
 		if(plugin.isPresent()){
 			return;
