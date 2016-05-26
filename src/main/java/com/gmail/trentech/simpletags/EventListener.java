@@ -31,7 +31,7 @@ import com.gmail.trentech.simpletags.tags.WorldTag;
 
 public class EventListener {
 
-	@Listener(order = Order.EARLY)
+	@Listener(order = Order.LATE)
 	public void onMessageChannelEventChat(MessageChannelEvent.Chat event, @First Player player){
 		Builder playerTag = Text.builder().onHover(TextActions.showText(Text.of(player.getName())));
 
@@ -71,7 +71,7 @@ public class EventListener {
 		
 		MessageFormatter formatter = event.getFormatter();
 		
-		formatter.setHeader(TextTemplate.of(worldTag, groupTagBuilder.build(), playerTag.build(), TextColors.RESET, ": "));
+		formatter.setHeader(TextTemplate.of(worldTag, groupTagBuilder.build(), playerTag.build(), ": ", TextColors.RESET));
 		
 		String messageOrig = TextSerializers.FORMATTING_CODE.serialize(event.getFormatter().getBody().toText());
 		Text message = TextSerializers.FORMATTING_CODE.deserialize(messageOrig);
@@ -91,10 +91,10 @@ public class EventListener {
 			return;
 		}
 		
-		Text message = TextSerializers.FORMATTING_CODE.deserialize(": " + event.getArguments());
+		Text message = TextSerializers.FORMATTING_CODE.deserialize(event.getArguments());
 		Text consoleTag = ConsoleTag.get().get().getTag();
 		
-		Main.getGame().getServer().getBroadcastChannel().send(Text.of(consoleTag, message));
+		Main.getGame().getServer().getBroadcastChannel().send(Text.of(consoleTag, ": ", message));
 		
 		event.setCancelled(true);
 	}
