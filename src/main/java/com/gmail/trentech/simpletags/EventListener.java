@@ -71,7 +71,7 @@ public class EventListener {
 		
 		MessageFormatter formatter = event.getFormatter();
 		
-		formatter.setHeader(TextTemplate.of(worldTag, groupTagBuilder.build(), playerTag.build(), ": ", TextColors.RESET));
+		formatter.setHeader(TextTemplate.of(worldTag, groupTagBuilder.build(), playerTag.build(), " ", TextColors.RESET));
 		
 		String messageOrig = TextSerializers.FORMATTING_CODE.serialize(event.getFormatter().getBody().toText());
 		Text message = TextSerializers.FORMATTING_CODE.deserialize(messageOrig);
