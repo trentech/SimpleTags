@@ -25,6 +25,7 @@ import org.spongepowered.api.text.serializer.TextSerializers;
 import com.gmail.trentech.simpletags.events.ChangeTagEvent;
 import com.gmail.trentech.simpletags.tags.GroupTag;
 import com.gmail.trentech.simpletags.tags.PlayerTag;
+import com.gmail.trentech.simpletags.tags.SingleTag;
 import com.gmail.trentech.simpletags.tags.Tag;
 import com.gmail.trentech.simpletags.tags.WorldTag;
 
@@ -101,6 +102,8 @@ public class EventListener {
 			WorldTag.cache.put(tag.getName(), (WorldTag) tag);
 		}else if(tag instanceof PlayerTag) {
 			PlayerTag.cache.put(tag.getName(), (PlayerTag) tag);
+		}else if(tag instanceof SingleTag) {
+			SingleTag.cache.put(tag.getName(), (SingleTag) tag);
 		}
 	}
 	
@@ -114,6 +117,8 @@ public class EventListener {
 			WorldTag.cache.remove(tag.getName());
 		}else if(tag instanceof PlayerTag) {
 			PlayerTag.cache.remove(tag.getName());
+		}else if(tag instanceof SingleTag) {
+			SingleTag.cache.remove(tag.getName());
 		}
 	}
 }
