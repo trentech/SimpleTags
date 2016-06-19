@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 import org.spongepowered.api.command.CommandSource;
+import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.service.pagination.PaginationList.Builder;
 import org.spongepowered.api.service.pagination.PaginationService;
 import org.spongepowered.api.text.Text;
@@ -65,9 +66,6 @@ public class Help {
 		return (CommandSource src) -> {
 			for(Help help : list){
 				if(help.getId().equalsIgnoreCase(input)){
-					Builder pages = Main.getGame().getServiceManager().provide(PaginationService.class).get().builder();
-					pages.title(Text.builder().color(TextColors.DARK_GREEN).append(Text.of(TextColors.GREEN, help.getCommand().toLowerCase())).build());
-					
 					List<Text> list = new ArrayList<>();
 
 					list.add(Text.of(TextColors.GREEN, "Description:"));
@@ -82,9 +80,20 @@ public class Help {
 						list.add(Text.of(TextColors.WHITE,  help.getExample().get(), TextColors.DARK_GREEN));
 					}
 					
-					pages.contents(list);
+					if(src instanceof Player) {
+						Builder pages = Main.getGame().getServiceManager().provide(PaginationService.class).get().builder();
+
+						pages.title(Text.builder().color(TextColors.DARK_GREEN).append(Text.of(TextColors.GREEN, help.getCommand().toLowerCase())).build());
+						
+						pages.contents(list);
+						
+						pages.sendTo(src);
+					}else {
+						for(Text text : list) {
+							src.sendMessage(text);
+						}
+					}
 					
-					pages.sendTo(src);
 					break;
 				}	
 			}

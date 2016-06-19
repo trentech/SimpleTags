@@ -9,6 +9,7 @@ import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
+import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.service.pagination.PaginationList.Builder;
 import org.spongepowered.api.service.pagination.PaginationService;
 import org.spongepowered.api.service.permission.PermissionService;
@@ -63,30 +64,37 @@ public class CMDGroup implements CommandExecutor {
     	Optional<GroupTag> optionalGroupTag = GroupTag.get(name);
     	
 		if(!args.hasAny("tag")) {
-			Builder pages = Main.getGame().getServiceManager().provide(PaginationService.class).get().builder();
-
-			pages.title(Text.builder().color(TextColors.DARK_GREEN).append(Text.of(TextColors.AQUA, "Group")).build());
-			
 			List<Text> list = new ArrayList<>();
 
 			if(optionalGroupTag.isPresent()){
-				list.add(Text.of(TextColors.AQUA, "Current Tag: ", optionalGroupTag.get().getTag()));	
+				list.add(Text.of(TextColors.GREEN, "Current Tag: ", TextColors.RESET, optionalGroupTag.get().getTag()));	
 			}else{
-				list.add(Text.of(TextColors.AQUA, "Current Tag: ", TextColors.RED, "NONE"));
+				list.add(Text.of(TextColors.GREEN, "Current Tag: ", TextColors.RED, "NONE"));
 			}
 			
-			list.add(Text.of(TextColors.AQUA, "Update Tag: ", TextColors.GREEN, "/tag group <group> <tag>"));
+			list.add(Text.of(TextColors.GREEN, "Update Tag: ", TextColors.YELLOW, "/tag group <group> <tag>"));
 			
-			pages.contents(list);
-			pages.sendTo(src);
-			
+			if(src instanceof Player) {
+				Builder pages = Main.getGame().getServiceManager().provide(PaginationService.class).get().builder();
+
+				pages.title(Text.builder().color(TextColors.DARK_GREEN).append(Text.of(TextColors.GREEN, "Group")).build());
+				
+				pages.contents(list);
+				
+				pages.sendTo(src);
+			}else {
+				for(Text text : list) {
+					src.sendMessage(text);
+				}
+			}
+
 			return CommandResult.success();
 		}
 		String tag = args.<String>getOne("tag").get();
     	
 		if(tag.equalsIgnoreCase("reset")){
 			if(optionalGroupTag.isPresent()){
-				optionalGroupTag.get().delete();
+				optionalGroupTag.get().setTag(null);
 			}
 			src.sendMessage(Text.of(TextColors.DARK_GREEN, "Tag reset"));
 			
@@ -94,9 +102,10 @@ public class CMDGroup implements CommandExecutor {
 		}
 		
 		if(optionalGroupTag.isPresent()){
-			optionalGroupTag.get().setTag(tag);
+			GroupTag groupTag = optionalGroupTag.get();
+			groupTag.setTag(tag);
 		}else{
-			new GroupTag(name, tag);
+			GroupTag.create(name, tag);
 		}
 
 		src.sendMessage(Text.of(TextColors.DARK_GREEN, "Tag changed to ", TextSerializers.FORMATTING_CODE.deserialize(tag)));

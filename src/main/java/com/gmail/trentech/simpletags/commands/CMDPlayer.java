@@ -17,7 +17,6 @@ import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.serializer.TextSerializers;
 
 import com.gmail.trentech.simpletags.Main;
-import com.gmail.trentech.simpletags.tags.DefaultTag;
 import com.gmail.trentech.simpletags.tags.PlayerTag;
 import com.gmail.trentech.simpletags.utils.Help;
 
@@ -45,7 +44,7 @@ public class CMDPlayer implements CommandExecutor {
 		Optional<Player> optionalPlayer = Main.getGame().getServer().getPlayer(name);
 
 		if(!optionalPlayer.isPresent()){
-			src.sendMessage(Text.of(TextColors.DARK_RED, name, "does not exist!"));
+			src.sendMessage(Text.of(TextColors.DARK_RED, name, " does not exist!"));
 			return CommandResult.empty();
 		}
 		
@@ -59,23 +58,30 @@ public class CMDPlayer implements CommandExecutor {
 		Optional<PlayerTag> optionalPlayerTag = PlayerTag.get(player);
 		
 		if(!args.hasAny("tag")) {
-			Builder pages = Main.getGame().getServiceManager().provide(PaginationService.class).get().builder();
-
-			pages.title(Text.builder().color(TextColors.DARK_GREEN).append(Text.of(TextColors.AQUA, "Player")).build());
-			
 			List<Text> list = new ArrayList<>();
 
 			if(optionalPlayerTag.isPresent()){
-				list.add(Text.of(TextColors.AQUA, "Current Tag: ", optionalPlayerTag.get().getTag()));
+				list.add(Text.of(TextColors.GREEN, "Current Tag: ", TextColors.RESET, optionalPlayerTag.get().getTag()));
 			}else{
-				list.add(Text.of(TextColors.AQUA, "Current Tag: ", DefaultTag.get(player).get()));
+				list.add(Text.of(TextColors.GREEN, "Current Tag: ", PlayerTag.getDefault(player)));
 			}
 			
-			list.add(Text.of(TextColors.AQUA, "Update Tag: ", TextColors.GREEN, "/tag player <player> <tag>"));
+			list.add(Text.of(TextColors.GREEN, "Update Tag: ", TextColors.YELLOW, "/tag player <player> <tag>"));
 			
-			pages.contents(list);
-			pages.sendTo(src);
-			
+			if(src instanceof Player) {
+				Builder pages = Main.getGame().getServiceManager().provide(PaginationService.class).get().builder();
+
+				pages.title(Text.builder().color(TextColors.DARK_GREEN).append(Text.of(TextColors.GREEN, "Player")).build());
+				
+				pages.contents(list);
+				
+				pages.sendTo(src);
+			}else {
+				for(Text text : list) {
+					src.sendMessage(text);
+				}
+			}
+
 			return CommandResult.success();
 		}
 
@@ -83,7 +89,7 @@ public class CMDPlayer implements CommandExecutor {
 		
 		if(tag.equalsIgnoreCase("reset")){
 			if(optionalPlayerTag.isPresent()){
-				optionalPlayerTag.get().delete();
+				optionalPlayerTag.get().setTag(null);
 			}
 			src.sendMessage(Text.of(TextColors.DARK_GREEN, "Tag reset"));
 			
@@ -91,9 +97,10 @@ public class CMDPlayer implements CommandExecutor {
 		}
 		
 		if(optionalPlayerTag.isPresent()){
-			optionalPlayerTag.get().setTag(tag);
+			PlayerTag playerTag = optionalPlayerTag.get();
+			playerTag.setTag(tag);
 		}else{
-			new PlayerTag(player, TextSerializers.FORMATTING_CODE.deserialize(tag));
+			PlayerTag.create(player, tag);
 		}
 
 		src.sendMessage(Text.of(TextColors.DARK_GREEN, "Tag changed to ", TextSerializers.FORMATTING_CODE.deserialize(tag)));

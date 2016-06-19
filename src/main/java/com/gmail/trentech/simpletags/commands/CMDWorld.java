@@ -53,22 +53,29 @@ public class CMDWorld implements CommandExecutor {
     	Optional<WorldTag> optionalWorldTag = WorldTag.get(world);
     	
 		if(!args.hasAny("tag")) {
-			Builder pages = Main.getGame().getServiceManager().provide(PaginationService.class).get().builder();
-
-			pages.title(Text.builder().color(TextColors.DARK_GREEN).append(Text.of(TextColors.AQUA, "Server")).build());
-			
 			List<Text> list = new ArrayList<>();
 
 			if(optionalWorldTag.isPresent()){
-				list.add(Text.of(TextColors.AQUA, "Current Tag: ", optionalWorldTag.get().getTag()));	
+				list.add(Text.of(TextColors.GREEN, "Current Tag: ", TextColors.RESET, optionalWorldTag.get().getTag()));	
 			}else{
-				list.add(Text.of(TextColors.AQUA, "Current Tag: ", TextColors.RED, "NONE"));
+				list.add(Text.of(TextColors.GREEN, "Current Tag: ", TextColors.RED, "NONE"));
 			}
 			
-			list.add(Text.of(TextColors.AQUA, "Update Tag: ", TextColors.GREEN, "/tag world <world> <tag>"));
+			list.add(Text.of(TextColors.GREEN, "Update Tag: ", TextColors.YELLOW, "/tag world <world> <tag>"));
 			
-			pages.contents(list);
-			pages.sendTo(src);
+			if(src instanceof Player) {
+				Builder pages = Main.getGame().getServiceManager().provide(PaginationService.class).get().builder();
+
+				pages.title(Text.builder().color(TextColors.DARK_GREEN).append(Text.of(TextColors.GREEN, "World")).build());
+				
+				pages.contents(list);
+				
+				pages.sendTo(src);
+			}else {
+				for(Text text : list) {
+					src.sendMessage(text);
+				}
+			}
 			
 			return CommandResult.success();
 		}
@@ -76,7 +83,7 @@ public class CMDWorld implements CommandExecutor {
 		
 		if(tag.equalsIgnoreCase("reset")){
 			if(optionalWorldTag.isPresent()){
-				optionalWorldTag.get().delete();
+				optionalWorldTag.get().setTag(null);
 			}
 			src.sendMessage(Text.of(TextColors.DARK_GREEN, "Tag reset"));
 			
@@ -84,9 +91,10 @@ public class CMDWorld implements CommandExecutor {
 		}
 		
 		if(optionalWorldTag.isPresent()){
-			optionalWorldTag.get().setTag(tag);
+			WorldTag worldTag = optionalWorldTag.get();
+			worldTag.setTag(tag);
 		}else{
-			new WorldTag(world, tag);
+			WorldTag.create(world, tag);
 		}
 
 		src.sendMessage(Text.of(TextColors.DARK_GREEN, "Tag changed to ", TextSerializers.FORMATTING_CODE.deserialize(tag)));

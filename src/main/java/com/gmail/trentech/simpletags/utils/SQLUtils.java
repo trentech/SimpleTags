@@ -22,20 +22,11 @@ public abstract class SQLUtils {
         return sql.getDataSource("jdbc:h2:./config/simpletags/tags");
 	}
 
-	public static void createTables() {
+	public static void createTable(String type) {
 		try {
 			Connection connection = getDataSource().getConnection();
 
-			PreparedStatement statement = connection.prepareStatement("CREATE TABLE IF NOT EXISTS Players (Name TEXT, Tag TEXT)");
-			statement.executeUpdate();
-			
-			statement = connection.prepareStatement("CREATE TABLE IF NOT EXISTS Worlds (Name TEXT, Tag TEXT)");
-			statement.executeUpdate();
-			
-			statement = connection.prepareStatement("CREATE TABLE IF NOT EXISTS Groups (Name TEXT, Tag TEXT)");
-			statement.executeUpdate();
-			
-			statement = connection.prepareStatement("CREATE TABLE IF NOT EXISTS Channels (Name TEXT, Tag TEXT)");
+			PreparedStatement statement = connection.prepareStatement("CREATE TABLE IF NOT EXISTS " + type + " (Name TEXT, Tag TEXT)");
 			statement.executeUpdate();
 			
 			connection.close();

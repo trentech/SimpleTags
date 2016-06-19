@@ -1,126 +1,62 @@
 package com.gmail.trentech.simpletags.tags;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map.Entry;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 
-import org.spongepowered.api.scheduler.Task;
-import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.serializer.TextSerializers;
 import org.spongepowered.api.world.World;
 
-import com.gmail.trentech.simpletags.Main;
-import com.gmail.trentech.simpletags.utils.SQLUtils;
+public class WorldTag extends Tag {
 
-public class WorldTag extends SQLUtils {
+	public static ConcurrentHashMap<String, WorldTag> cache = new ConcurrentHashMap<>();
 
-	private final String name;
-	private Text tag;
-	
-	private WorldTag(String world, String tag){
-		this.name = world;
-		this.tag = TextSerializers.FORMATTING_CODE.deserialize(tag);
+	WorldTag(String world, String tag){
+		super(world, WorldTag.class, tag);
 	}
-	
-	public WorldTag(World world, String tag){
-		this.name = world.getName();
-		this.tag = TextSerializers.FORMATTING_CODE.deserialize(tag);
-		save();
-	}
-	
-	public String getName(){
-		return name;
-	}
-	
-	public Text getTag(){
-		return tag;
-	}
-	
-	public void setTag(String tag){
-		this.tag = TextSerializers.FORMATTING_CODE.deserialize(tag);
-		update();
+
+	WorldTag(Tag tag){
+		super(tag);
 	}
 	
 	public static Optional<WorldTag> get(World world){
-		Optional<WorldTag> optionalWorldTag = Optional.empty();
+		String name = world.getName();
+
+		if(cache.containsKey(name)) {
+			return Optional.of(cache.get(name));
+		}
 		
+		return Optional.empty();
+	}
+	
+	public static Optional<WorldTag> create(World world, String tag) {
 		String name = world.getName();
 		
-		try {
-		    Connection connection = getDataSource().getConnection();
-		    
-		    PreparedStatement statement = connection.prepareStatement("SELECT * FROM Worlds");
-		    
-			ResultSet result = statement.executeQuery();
-			
-			while (result.next()) {
-				if(result.getString("Name").equalsIgnoreCase(name)){
-					optionalWorldTag = Optional.of(new WorldTag(name, result.getString("Tag")));		
-					break;
-				}			
-			}
-			connection.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
+		if(cache.containsKey(name)) {
+			return Optional.empty();
+		}
+
+		return Optional.of(new WorldTag(name, tag));
+	}
+
+	public static List<WorldTag> getAll() {
+		List<WorldTag> list = new ArrayList<>();
+		
+		for(Entry<String, WorldTag> entry : cache.entrySet()) {
+			list.add(entry.getValue());
 		}
 		
-		return optionalWorldTag;
+		return list;
 	}
 	
-	private void save(){
-		try {
-		    Connection connection = getDataSource().getConnection();
-		    
-		    PreparedStatement statement = connection.prepareStatement("INSERT into Worlds (Name, Tag) VALUES (?, ?)");	
-			
-		    statement.setString(1, this.name);
-		    statement.setString(2, TextSerializers.FORMATTING_CODE.serialize(this.tag));
+	public static void init() {
+		ConcurrentHashMap<String, WorldTag> hash = new ConcurrentHashMap<>();
+		
+		for(Tag tag : getAll(WorldTag.class)) {
+			hash.put(tag.getName(), new WorldTag(tag));
+		}
 
-			statement.executeUpdate();
-			
-			connection.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	private void update(){
-		try {
-		    Connection connection = getDataSource().getConnection();
-		    
-		    PreparedStatement statement = connection.prepareStatement("UPDATE Worlds SET Tag = ? WHERE Name = ?");	
-			
-		    statement.setString(1, TextSerializers.FORMATTING_CODE.serialize(this.tag));
-		    statement.setString(2, this.name);
-
-			statement.executeUpdate();
-			
-			connection.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public void delete(){
-		try {
-		    Connection connection = getDataSource().getConnection();
-		    
-		    PreparedStatement statement = connection.prepareStatement("DELETE from Worlds WHERE Name = ?");
-		    
-			statement.setString(1, this.name);
-			statement.executeUpdate();
-			
-			connection.close();
-			
-			for(Task task : Main.getGame().getScheduler().getScheduledTasks()){
-				if(task.getName().contains(this.name)){
-					task.cancel();
-				}
-			}
-		}catch (SQLException e) {
-			e.printStackTrace();
-		}
+		cache = hash;
 	}
 }

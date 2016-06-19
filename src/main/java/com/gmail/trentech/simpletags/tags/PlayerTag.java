@@ -1,132 +1,120 @@
 package com.gmail.trentech.simpletags.tags;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.serializer.TextSerializers;
 
-import com.gmail.trentech.simpletags.Main;
-import com.gmail.trentech.simpletags.utils.SQLUtils;
+public class PlayerTag extends Tag {
 
-public class PlayerTag extends SQLUtils {
+	public static Map<String, PlayerTag> cache = new ConcurrentHashMap<>();
 
-	private final String name;
-	private Text tag;
+	PlayerTag(String playerUUID, String tag){
+		super(playerUUID, PlayerTag.class, tag);
+	}
 
-	private PlayerTag(String player, String tag){
-		this.name = player;
-		this.tag = TextSerializers.FORMATTING_CODE.deserialize(tag);
-	}
-	
-	public PlayerTag(Player player, Text tag){
-		this.name = player.getUniqueId().toString();;
-		this.tag = tag;
-		save();
-	}
-	
-	public String getName(){
-		return name;
-	}
-	
-	public Text getTag(){
-		return tag;
-	}
-	
-	public void setTag(String tag){
-		this.tag = TextSerializers.FORMATTING_CODE.deserialize(tag);
-		update();
-	}
-	
-	public void setTag(Text tag){
-		this.tag = tag;
-		update();
+	PlayerTag(Tag tag) {
+		super(tag);
 	}
 	
 	public static Optional<PlayerTag> get(Player player){
+		String uuid = player.getUniqueId().toString();
 		
-		Optional<PlayerTag> optionalPlayerTag = Optional.empty();
-		
-		String name = player.getUniqueId().toString();
-
-		try {
-		    Connection connection = getDataSource().getConnection();
-		    
-		    PreparedStatement statement = connection.prepareStatement("SELECT * FROM Players");
-		    
-			ResultSet result = statement.executeQuery();
-			
-			while (result.next()) {
-				if(result.getString("Name").equalsIgnoreCase(name)){
-					optionalPlayerTag = Optional.of(new PlayerTag(name, result.getString("Tag").replace("%PLAYER%", player.getName())));		
-					break;
-				}			
-			}
-			connection.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
+		if(cache.containsKey(uuid)) {
+			return Optional.of(cache.get(uuid));
 		}
 		
-		return optionalPlayerTag;
+		return Optional.empty();
 	}
 	
-	private void save(){
-		try {
-		    Connection connection = getDataSource().getConnection();
-		    
-		    PreparedStatement statement = connection.prepareStatement("INSERT into Players (Name, Tag) VALUES (?, ?)");	
-			
-		    statement.setString(1, this.name);
-		    statement.setString(2, TextSerializers.FORMATTING_CODE.serialize(this.tag));
+	public static Optional<PlayerTag> create(String uuid, String tag) {
+		if(cache.containsKey(uuid)) {
+			return Optional.empty();
+		}
 
-			statement.executeUpdate();
-			
-			connection.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+		return Optional.of(new PlayerTag(uuid, tag));
 	}
 	
-	private void update(){
-		try {
-		    Connection connection = getDataSource().getConnection();
-		    
-		    PreparedStatement statement = connection.prepareStatement("UPDATE Players SET Tag = ? WHERE Name = ?");	
-			
-		    statement.setString(1, TextSerializers.FORMATTING_CODE.serialize(this.tag));
-		    statement.setString(2, this.name);
+	public static Optional<PlayerTag> create(Player player, String tag) {
+		String uuid = player.getUniqueId().toString();
+		
+		if(cache.containsKey(uuid)) {
+			return Optional.empty();
+		}
 
-			statement.executeUpdate();
-			
-			connection.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+		return Optional.of(new PlayerTag(uuid, tag));
 	}
 	
-	public void delete(){
-		try {
-		    Connection connection = getDataSource().getConnection();
-		    
-		    PreparedStatement statement = connection.prepareStatement("DELETE from Players WHERE Name = ?");
-		    
-			statement.setString(1, this.name);
-			statement.executeUpdate();
-			
-			connection.close();
-			
-			for(Task task : Main.getGame().getScheduler().getScheduledTasks()){
-				if(task.getName().contains(this.name)){
-					task.cancel();
-				}
-			}
-		}catch (SQLException e) {
-			e.printStackTrace();
+	public static List<PlayerTag> getAll() {
+		List<PlayerTag> list = new ArrayList<>();
+		
+		for(Entry<String, PlayerTag> entry : cache.entrySet()) {
+			list.add(entry.getValue());
 		}
+		
+		return list;
+	}
+	
+	public static Text getDefault(Player player) {
+		Tag tag = getDefault().get();
+		String text = TextSerializers.FORMATTING_CODE.serialize(tag.getTag()).replace("%PLAYER%", player.getName());
+		return TextSerializers.FORMATTING_CODE.deserialize(text);
+	}
+	
+	public static Optional<PlayerTag> getDefault() {
+		if(cache.containsKey("simpletags.DEFAULT")) {
+			return Optional.of(cache.get("simpletags.DEFAULT"));
+		}
+			
+		return Optional.empty();
+	}
+	
+	public static Optional<PlayerTag> getConsole() {
+		if(cache.containsKey("simpletags.CONSOLE")) {
+			return Optional.of(cache.get("simpletags.CONSOLE"));
+		}
+		
+		return Optional.empty();
+	}
+	
+	private static void createDefault() {
+		String name = "simpletags.DEFAULT";
+		String tag = "&6[%PLAYER%]";
+
+		if(cache.containsKey(name)) {
+			return;
+		}
+		
+		create(name, tag);
+	}
+
+	private static void createConsole() {
+		String name = "simpletags.CONSOLE";
+		String tag = "&6[CONSOLE]";
+
+		if(cache.containsKey(name)) {
+			return;
+		}
+		
+		create(name, tag);
+	}
+	
+	public static void init() {
+		ConcurrentHashMap<String, PlayerTag> hash = new ConcurrentHashMap<>();
+		
+		for(Tag tag : getAll(PlayerTag.class)) {
+			hash.put(tag.getName(), new PlayerTag(tag));
+		}
+
+		cache = hash;
+		
+		createConsole();
+		createDefault();
 	}
 }
