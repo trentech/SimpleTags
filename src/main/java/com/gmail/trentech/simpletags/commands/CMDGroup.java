@@ -24,92 +24,92 @@ import com.gmail.trentech.simpletags.utils.Help;
 
 public class CMDGroup implements CommandExecutor {
 
-	public CMDGroup(){
+	public CMDGroup() {
 		Help help = new Help("group", "group", " View and edit group tags");
 		help.setSyntax(" /tag group <group> <tag>\n /t g <group> <tag>");
 		help.setExample(" /tag group admin\n /tag group admin &e[BOSS]\n /tag group admin reset");
 		help.save();
 	}
-	
+
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
-		if(!args.hasAny("name")) {
+		if (!args.hasAny("name")) {
 			src.sendMessage(Text.of(TextColors.YELLOW, "/tag group <group> <tag>"));
 			return CommandResult.empty();
 		}
-		String name = args.<String>getOne("name").get();
+		String name = args.<String> getOne("name").get();
 
 		PermissionService permissionService = Main.getGame().getServiceManager().provide(PermissionService.class).get();
-		
+
 		boolean groupExist = false;
-		
-		for(Subject subject : permissionService.getGroupSubjects().getAllSubjects()){
+
+		for (Subject subject : permissionService.getGroupSubjects().getAllSubjects()) {
 			String group = subject.getIdentifier();
 
-			if(group.equalsIgnoreCase("op_0") || group.equalsIgnoreCase("op_1") || group.equalsIgnoreCase("op_2") || group.equalsIgnoreCase("op_3") || group.equalsIgnoreCase("op_4")){
-				 group = "op";
+			if (group.equalsIgnoreCase("op_0") || group.equalsIgnoreCase("op_1") || group.equalsIgnoreCase("op_2") || group.equalsIgnoreCase("op_3") || group.equalsIgnoreCase("op_4")) {
+				group = "op";
 			}
-			
-			if(name.equalsIgnoreCase(group)){
+
+			if (name.equalsIgnoreCase(group)) {
 				groupExist = true;
 				break;
 			}
 		}
-		
-    	if(!groupExist){
+
+		if (!groupExist) {
 			src.sendMessage(Text.of(TextColors.DARK_RED, "Group does not exist!"));
 			return CommandResult.empty();
-    	}
+		}
 
-    	Optional<GroupTag> optionalGroupTag = GroupTag.get(name);
-    	
-		if(!args.hasAny("tag")) {
+		Optional<GroupTag> optionalGroupTag = GroupTag.get(name);
+
+		if (!args.hasAny("tag")) {
 			List<Text> list = new ArrayList<>();
 
-			if(optionalGroupTag.isPresent()){
-				list.add(Text.of(TextColors.GREEN, "Current Tag: ", TextColors.RESET, optionalGroupTag.get().getTag()));	
-			}else{
+			if (optionalGroupTag.isPresent()) {
+				list.add(Text.of(TextColors.GREEN, "Current Tag: ", TextColors.RESET, optionalGroupTag.get().getTag()));
+			} else {
 				list.add(Text.of(TextColors.GREEN, "Current Tag: ", TextColors.RED, "NONE"));
 			}
-			
+
 			list.add(Text.of(TextColors.GREEN, "Update Tag: ", TextColors.YELLOW, "/tag group <group> <tag>"));
-			
-			if(src instanceof Player) {
+
+			if (src instanceof Player) {
 				Builder pages = Main.getGame().getServiceManager().provide(PaginationService.class).get().builder();
 
 				pages.title(Text.builder().color(TextColors.DARK_GREEN).append(Text.of(TextColors.GREEN, "Group")).build());
-				
+
 				pages.contents(list);
-				
+
 				pages.sendTo(src);
-			}else {
-				for(Text text : list) {
+			} else {
+				for (Text text : list) {
 					src.sendMessage(text);
 				}
 			}
 
 			return CommandResult.success();
 		}
-		String tag = args.<String>getOne("tag").get();
-    	
-		if(tag.equalsIgnoreCase("reset")){
-			if(optionalGroupTag.isPresent()){
+		String tag = args.<String> getOne("tag").get();
+
+		if (tag.equalsIgnoreCase("reset")) {
+			if (optionalGroupTag.isPresent()) {
 				optionalGroupTag.get().setTag(null);
 			}
 			src.sendMessage(Text.of(TextColors.DARK_GREEN, "Tag reset"));
-			
+
 			return CommandResult.success();
 		}
-		
-		if(optionalGroupTag.isPresent()){
+
+		if (optionalGroupTag.isPresent()) {
 			GroupTag groupTag = optionalGroupTag.get();
 			groupTag.setTag(tag);
-		}else{
+		} else {
 			GroupTag.create(name, tag);
 		}
 
 		src.sendMessage(Text.of(TextColors.DARK_GREEN, "Tag changed to ", TextSerializers.FORMATTING_CODE.deserialize(tag)));
-		
+
 		return CommandResult.success();
 	}
 

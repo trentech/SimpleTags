@@ -7,5 +7,5 @@ public class Resource {
 	public final static String ID = "com.gmail.trentech.simpletags";
 	public final static String AUTHOR = "TrenTech";
 	public final static String URL = "http://github.com/TrenTech/SimpleTags";
-	
+
 }

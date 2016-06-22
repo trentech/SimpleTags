@@ -12,28 +12,28 @@ public class WorldTag extends Tag {
 
 	public static ConcurrentHashMap<String, WorldTag> cache = new ConcurrentHashMap<>();
 
-	WorldTag(String world, String tag){
+	WorldTag(String world, String tag) {
 		super(world, WorldTag.class, tag);
 	}
 
-	WorldTag(Tag tag){
+	WorldTag(Tag tag) {
 		super(tag);
 	}
-	
-	public static Optional<WorldTag> get(World world){
+
+	public static Optional<WorldTag> get(World world) {
 		String name = world.getName();
 
-		if(cache.containsKey(name)) {
+		if (cache.containsKey(name)) {
 			return Optional.of(cache.get(name));
 		}
-		
+
 		return Optional.empty();
 	}
-	
+
 	public static Optional<WorldTag> create(World world, String tag) {
 		String name = world.getName();
-		
-		if(cache.containsKey(name)) {
+
+		if (cache.containsKey(name)) {
 			return Optional.empty();
 		}
 
@@ -42,18 +42,18 @@ public class WorldTag extends Tag {
 
 	public static List<WorldTag> getAll() {
 		List<WorldTag> list = new ArrayList<>();
-		
-		for(Entry<String, WorldTag> entry : cache.entrySet()) {
+
+		for (Entry<String, WorldTag> entry : cache.entrySet()) {
 			list.add(entry.getValue());
 		}
-		
+
 		return list;
 	}
-	
+
 	public static void init() {
 		ConcurrentHashMap<String, WorldTag> hash = new ConcurrentHashMap<>();
-		
-		for(Tag tag : getAll(WorldTag.class)) {
+
+		for (Tag tag : getAll(WorldTag.class)) {
 			hash.put(tag.getName(), new WorldTag(tag));
 		}
 

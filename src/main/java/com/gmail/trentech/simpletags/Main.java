@@ -27,7 +27,7 @@ import com.gmail.trentech.simpletags.utils.SQLUtils;
 import me.flibio.updatifier.Updatifier;
 
 @Updatifier(repoName = "SimpleTags", repoOwner = "TrenTech", version = Resource.VERSION)
-@Plugin(id = Resource.ID, name = Resource.NAME, authors = Resource.AUTHOR, url = Resource.URL, dependencies = {@Dependency(id = "Updatifier", optional = true)})
+@Plugin(id = Resource.ID, name = Resource.NAME, authors = Resource.AUTHOR, url = Resource.URL, dependencies = { @Dependency(id = "Updatifier", optional = true) })
 public class Main {
 
 	private static Game game;
@@ -37,7 +37,7 @@ public class Main {
 	private static List<Class<? extends Tag>> tags = new ArrayList<>();
 
 	@Listener
-    public void onPreInitializationEvent(GamePreInitializationEvent event) {
+	public void onPreInitializationEvent(GamePreInitializationEvent event) {
 		game = Sponge.getGame();
 		plugin = getGame().getPluginManager().getPlugin(Resource.ID).get();
 		log = getPlugin().getLogger();
@@ -50,13 +50,13 @@ public class Main {
 		registerTag(WorldTag.class);
 		registerTag(SingleTag.class);
 	}
-	
+
 	@Listener
 	public void onPostInitializationEvent(GamePostInitializationEvent event) {
 		getGame().getEventManager().registerListeners(this, new EventListener());
 		getGame().getCommandManager().register(this, new CommandManager().getCmd(), "tag", "t");
 
-		for(Class<? extends Tag> clazz : tags) {
+		for (Class<? extends Tag> clazz : tags) {
 			SQLUtils.createTable(clazz.getSimpleName());
 		}
 
@@ -81,7 +81,7 @@ public class Main {
 	public static void registerTag(Class<? extends Tag> clazz) {
 		tags.add(clazz);
 	}
-	
+
 	public static void registerCommand(CommandSpec spec, String... aliases) {
 		CommandManager.hash.put(spec, aliases);
 	}

@@ -25,26 +25,25 @@ public class CMDTag implements CommandExecutor {
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 		List<Text> list = new ArrayList<>();
-		
-		for(Entry<CommandSpec, String[]> entry : CommandManager.hash.entrySet()) {
+
+		for (Entry<CommandSpec, String[]> entry : CommandManager.hash.entrySet()) {
 			String[] aliases = entry.getValue();
-			
-			if(src.hasPermission("simpletags.cmd.tag." + aliases[0])) {
-				list.add(Text.builder().color(TextColors.GREEN).onHover(TextActions.showText(Text.of("Click command for more information ")))
-						.onClick(TextActions.executeCallback(Help.getHelp(aliases[0]))).append(Text.of(" /tag " + aliases[0])).build());
+
+			if (src.hasPermission("simpletags.cmd.tag." + aliases[0])) {
+				list.add(Text.builder().color(TextColors.GREEN).onHover(TextActions.showText(Text.of("Click command for more information "))).onClick(TextActions.executeCallback(Help.getHelp(aliases[0]))).append(Text.of(" /tag " + aliases[0])).build());
 			}
 		}
 
-		if(src instanceof Player) {
+		if (src instanceof Player) {
 			Builder pages = Main.getGame().getServiceManager().provide(PaginationService.class).get().builder();
 
 			pages.title(Text.builder().color(TextColors.DARK_GREEN).append(Text.of(TextColors.GREEN, "Command List")).build());
-			
+
 			pages.contents(list);
-			
+
 			pages.sendTo(src);
-		}else {
-			for(Text text : list) {
+		} else {
+			for (Text text : list) {
 				src.sendMessage(text);
 			}
 		}
@@ -52,5 +51,3 @@ public class CMDTag implements CommandExecutor {
 		return CommandResult.success();
 	}
 }
-
-

@@ -23,35 +23,35 @@ public class CMDDefault implements CommandExecutor {
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 		PlayerTag defaultTag = PlayerTag.getDefault().get();
-		
-		if(!args.hasAny("tag")) {
+
+		if (!args.hasAny("tag")) {
 			List<Text> list = new ArrayList<>();
 
 			list.add(Text.of(TextColors.GREEN, "Current Tag: ", TextColors.RESET, defaultTag.getTag()));
 			list.add(Text.of(Text.of(TextColors.GREEN, "Update Tag: ", TextColors.YELLOW, "/tag player default <tag>")));
-			
-			if(src instanceof Player) {
+
+			if (src instanceof Player) {
 				Builder pages = Main.getGame().getServiceManager().provide(PaginationService.class).get().builder();
 
 				pages.title(Text.builder().color(TextColors.DARK_GREEN).append(Text.of(TextColors.GREEN, "Player")).build());
-				
+
 				pages.contents(list);
-				
+
 				pages.sendTo(src);
-			}else {
-				for(Text text : list) {
+			} else {
+				for (Text text : list) {
 					src.sendMessage(text);
 				}
 			}
 
 			return CommandResult.success();
 		}
-		String tag = args.<String>getOne("tag").get();
-		
+		String tag = args.<String> getOne("tag").get();
+
 		defaultTag.setTag(tag);
 
 		src.sendMessage(Text.of(TextColors.DARK_GREEN, "Tag changed to ", TextSerializers.FORMATTING_CODE.deserialize(tag)));
-		
+
 		return CommandResult.success();
 	}
 

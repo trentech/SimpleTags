@@ -57,8 +57,7 @@ public class EventListener {
 			for (Subject subject : parent.getValue()) {
 				String group = subject.getIdentifier();
 
-				if (group.equalsIgnoreCase("op_0") || group.equalsIgnoreCase("op_1") || group.equalsIgnoreCase("op_2")
-						|| group.equalsIgnoreCase("op_3") || group.equalsIgnoreCase("op_4")) {
+				if (group.equalsIgnoreCase("op_0") || group.equalsIgnoreCase("op_1") || group.equalsIgnoreCase("op_2") || group.equalsIgnoreCase("op_3") || group.equalsIgnoreCase("op_4")) {
 					group = "op";
 				}
 
@@ -73,7 +72,7 @@ public class EventListener {
 		MessageFormatter formatter = event.getFormatter();
 
 		Text old = TextSerializers.FORMATTING_CODE.deserialize(TextSerializers.FORMATTING_CODE.serialize(formatter.getHeader().toText()).replace("<" + player.getName() + ">", ""));
-		
+
 		formatter.setHeader(TextTemplate.of(worldTag, groupTagBuilder.build(), playerTag.build(), old, TextColors.RESET));
 	}
 
@@ -91,33 +90,33 @@ public class EventListener {
 
 		event.setCancelled(true);
 	}
-	
+
 	@Listener
 	public void onChangeTagEventUpdate(ChangeTagEvent.Update event) {
 		Tag tag = event.getTag();
-		
-		if(tag instanceof GroupTag) {
+
+		if (tag instanceof GroupTag) {
 			GroupTag.cache.put(tag.getName(), (GroupTag) tag);
-		}else if(tag instanceof WorldTag) {
+		} else if (tag instanceof WorldTag) {
 			WorldTag.cache.put(tag.getName(), (WorldTag) tag);
-		}else if(tag instanceof PlayerTag) {
+		} else if (tag instanceof PlayerTag) {
 			PlayerTag.cache.put(tag.getName(), (PlayerTag) tag);
-		}else if(tag instanceof SingleTag) {
+		} else if (tag instanceof SingleTag) {
 			SingleTag.cache.put(tag.getName(), (SingleTag) tag);
 		}
 	}
-	
+
 	@Listener
 	public void onChangeTagEventDelete(ChangeTagEvent.Delete event) {
 		Tag tag = event.getTag();
-		
-		if(tag instanceof GroupTag) {
+
+		if (tag instanceof GroupTag) {
 			GroupTag.cache.remove(tag.getName());
-		}else if(tag instanceof WorldTag) {
+		} else if (tag instanceof WorldTag) {
 			WorldTag.cache.remove(tag.getName());
-		}else if(tag instanceof PlayerTag) {
+		} else if (tag instanceof PlayerTag) {
 			PlayerTag.cache.remove(tag.getName());
-		}else if(tag instanceof SingleTag) {
+		} else if (tag instanceof SingleTag) {
 			SingleTag.cache.remove(tag.getName());
 		}
 	}

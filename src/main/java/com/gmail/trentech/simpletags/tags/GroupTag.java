@@ -10,24 +10,24 @@ public class GroupTag extends Tag {
 
 	public static ConcurrentHashMap<String, GroupTag> cache = new ConcurrentHashMap<>();
 
-	GroupTag(String group, String tag){
-		super(group, GroupTag.class, tag);	
+	GroupTag(String group, String tag) {
+		super(group, GroupTag.class, tag);
 	}
 
 	GroupTag(Tag tag) {
 		super(tag);
 	}
 
-	public static Optional<GroupTag> get(String group){
-		if(cache.containsKey(group)) {
+	public static Optional<GroupTag> get(String group) {
+		if (cache.containsKey(group)) {
 			return Optional.of(cache.get(group));
 		}
-		
+
 		return Optional.empty();
 	}
-	
+
 	public static Optional<GroupTag> create(String group, String tag) {
-		if(cache.containsKey(group)) {
+		if (cache.containsKey(group)) {
 			return Optional.empty();
 		}
 
@@ -36,18 +36,18 @@ public class GroupTag extends Tag {
 
 	public static List<GroupTag> getAll() {
 		List<GroupTag> list = new ArrayList<>();
-		
-		for(Entry<String, GroupTag> entry : cache.entrySet()) {
+
+		for (Entry<String, GroupTag> entry : cache.entrySet()) {
 			list.add(entry.getValue());
 		}
-		
+
 		return list;
 	}
-	
+
 	public static void init() {
 		ConcurrentHashMap<String, GroupTag> hash = new ConcurrentHashMap<>();
-		
-		for(Tag tag : getAll(GroupTag.class)) {
+
+		for (Tag tag : getAll(GroupTag.class)) {
 			hash.put(tag.getName(), new GroupTag(tag));
 		}
 
