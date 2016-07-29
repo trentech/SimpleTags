@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -17,7 +18,6 @@ import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.serializer.TextSerializers;
 import org.spongepowered.api.world.World;
 
-import com.gmail.trentech.simpletags.Main;
 import com.gmail.trentech.simpletags.tags.WorldTag;
 import com.gmail.trentech.simpletags.utils.Help;
 
@@ -42,7 +42,7 @@ public class CMDWorld implements CommandExecutor {
 			name = ((Player) src).getWorld().getName();
 		}
 
-		Optional<World> optionalWorld = Main.getGame().getServer().getWorld(name);
+		Optional<World> optionalWorld = Sponge.getServer().getWorld(name);
 
 		if (!optionalWorld.isPresent()) {
 			src.sendMessage(Text.of(TextColors.DARK_RED, "World does not exist!"));
@@ -64,7 +64,7 @@ public class CMDWorld implements CommandExecutor {
 			list.add(Text.of(TextColors.GREEN, "Update Tag: ", TextColors.YELLOW, "/tag world <world> <tag>"));
 
 			if (src instanceof Player) {
-				Builder pages = Main.getGame().getServiceManager().provide(PaginationService.class).get().builder();
+				Builder pages = Sponge.getServiceManager().provide(PaginationService.class).get().builder();
 
 				pages.title(Text.builder().color(TextColors.DARK_GREEN).append(Text.of(TextColors.GREEN, "World")).build());
 

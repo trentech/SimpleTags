@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -18,7 +19,6 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.serializer.TextSerializers;
 
-import com.gmail.trentech.simpletags.Main;
 import com.gmail.trentech.simpletags.tags.GroupTag;
 import com.gmail.trentech.simpletags.utils.Help;
 
@@ -39,7 +39,7 @@ public class CMDGroup implements CommandExecutor {
 		}
 		String name = args.<String> getOne("name").get();
 
-		PermissionService permissionService = Main.getGame().getServiceManager().provide(PermissionService.class).get();
+		PermissionService permissionService = Sponge.getServiceManager().provide(PermissionService.class).get();
 
 		boolean groupExist = false;
 
@@ -75,7 +75,7 @@ public class CMDGroup implements CommandExecutor {
 			list.add(Text.of(TextColors.GREEN, "Update Tag: ", TextColors.YELLOW, "/tag group <group> <tag>"));
 
 			if (src instanceof Player) {
-				Builder pages = Main.getGame().getServiceManager().provide(PaginationService.class).get().builder();
+				Builder pages = Sponge.getServiceManager().provide(PaginationService.class).get().builder();
 
 				pages.title(Text.builder().color(TextColors.DARK_GREEN).append(Text.of(TextColors.GREEN, "Group")).build());
 

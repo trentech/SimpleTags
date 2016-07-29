@@ -5,6 +5,7 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
 
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.source.ConsoleSource;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
@@ -86,7 +87,7 @@ public class EventListener {
 		Text message = TextSerializers.FORMATTING_CODE.deserialize(event.getArguments());
 		Text consoleTag = PlayerTag.getConsole().get().getTag();
 
-		Main.getGame().getServer().getBroadcastChannel().send(Text.of(consoleTag, ": ", message));
+		Sponge.getServer().getBroadcastChannel().send(Text.of(consoleTag, ": ", message));
 
 		event.setCancelled(true);
 	}

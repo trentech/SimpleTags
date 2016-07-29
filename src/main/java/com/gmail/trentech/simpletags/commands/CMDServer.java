@@ -3,6 +3,7 @@ package com.gmail.trentech.simpletags.commands;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -15,7 +16,6 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.serializer.TextSerializers;
 
-import com.gmail.trentech.simpletags.Main;
 import com.gmail.trentech.simpletags.tags.PlayerTag;
 import com.gmail.trentech.simpletags.utils.Help;
 
@@ -39,7 +39,7 @@ public class CMDServer implements CommandExecutor {
 			list.add(Text.of(Text.of(TextColors.GREEN, "Update Tag: ", TextColors.YELLOW, "/tag server <tag>")));
 
 			if (src instanceof Player) {
-				Builder pages = Main.getGame().getServiceManager().provide(PaginationService.class).get().builder();
+				Builder pages = Sponge.getServiceManager().provide(PaginationService.class).get().builder();
 
 				pages.title(Text.builder().color(TextColors.DARK_GREEN).append(Text.of(TextColors.GREEN, "Server")).build());
 

@@ -8,10 +8,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.serializer.TextSerializers;
 
-import com.gmail.trentech.simpletags.Main;
 import com.gmail.trentech.simpletags.events.ChangeTagEvent;
 import com.gmail.trentech.simpletags.utils.SQLUtils;
 
@@ -74,7 +74,7 @@ public class Tag extends SQLUtils {
 
 			connection.close();
 
-			Main.getGame().getEventManager().post(new ChangeTagEvent.Update(this));
+			Sponge.getEventManager().post(new ChangeTagEvent.Update(this));
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -93,7 +93,7 @@ public class Tag extends SQLUtils {
 
 			connection.close();
 
-			Main.getGame().getEventManager().post(new ChangeTagEvent.Update(this));
+			Sponge.getEventManager().post(new ChangeTagEvent.Update(this));
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -110,7 +110,7 @@ public class Tag extends SQLUtils {
 
 			connection.close();
 
-			Main.getGame().getEventManager().post(new ChangeTagEvent.Delete(this));
+			Sponge.getEventManager().post(new ChangeTagEvent.Delete(this));
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

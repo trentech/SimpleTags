@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -16,7 +17,6 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.serializer.TextSerializers;
 
-import com.gmail.trentech.simpletags.Main;
 import com.gmail.trentech.simpletags.tags.PlayerTag;
 import com.gmail.trentech.simpletags.utils.Help;
 
@@ -41,7 +41,7 @@ public class CMDPlayer implements CommandExecutor {
 			name = ((Player) src).getName();
 		}
 
-		Optional<Player> optionalPlayer = Main.getGame().getServer().getPlayer(name);
+		Optional<Player> optionalPlayer = Sponge.getServer().getPlayer(name);
 
 		if (!optionalPlayer.isPresent()) {
 			src.sendMessage(Text.of(TextColors.DARK_RED, name, " does not exist!"));
@@ -69,7 +69,7 @@ public class CMDPlayer implements CommandExecutor {
 			list.add(Text.of(TextColors.GREEN, "Update Tag: ", TextColors.YELLOW, "/tag player <player> <tag>"));
 
 			if (src instanceof Player) {
-				Builder pages = Main.getGame().getServiceManager().provide(PaginationService.class).get().builder();
+				Builder pages = Sponge.getServiceManager().provide(PaginationService.class).get().builder();
 
 				pages.title(Text.builder().color(TextColors.DARK_GREEN).append(Text.of(TextColors.GREEN, "Player")).build());
 
