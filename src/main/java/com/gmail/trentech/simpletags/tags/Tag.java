@@ -126,6 +126,7 @@ public class Tag extends SQLUtils {
 
 			while (result.next()) {
 				if (result.getString("Name").equals(getName())) {
+					connection.close();
 					return true;
 				}
 			}
@@ -151,6 +152,7 @@ public class Tag extends SQLUtils {
 			while (result.next()) {
 				String uuid = result.getString("Name");
 				if (uuid.equals(name)) {
+					connection.close();
 					return Optional.of(new Tag(uuid, clazz, result.getString("Tag")));
 				}
 			}
