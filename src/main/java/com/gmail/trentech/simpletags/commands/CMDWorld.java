@@ -1,22 +1,16 @@
 package com.gmail.trentech.simpletags.commands;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
-import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
-import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.service.pagination.PaginationList.Builder;
-import org.spongepowered.api.service.pagination.PaginationService;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.serializer.TextSerializers;
-import org.spongepowered.api.world.World;
+import org.spongepowered.api.world.storage.WorldProperties;
 
 import com.gmail.trentech.simpletags.tags.WorldTag;
 import com.gmail.trentech.simpletags.utils.Help;
@@ -32,50 +26,18 @@ public class CMDWorld implements CommandExecutor {
 
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
-		if (!args.hasAny("name")) {
-			src.sendMessage(Text.of(TextColors.YELLOW, "/tag world <world> <tag>"));
-			return CommandResult.empty();
-		}
-		String name = args.<String> getOne("name").get();
+		WorldProperties properties = args.<WorldProperties> getOne("world").get();
 
-		if (src instanceof Player && name.equalsIgnoreCase("@w")) {
-			name = ((Player) src).getWorld().getName();
-		}
-
-		Optional<World> optionalWorld = Sponge.getServer().getWorld(name);
-
-		if (!optionalWorld.isPresent()) {
-			src.sendMessage(Text.of(TextColors.DARK_RED, "World does not exist!"));
-			return CommandResult.empty();
-		}
-		World world = optionalWorld.get();
-
-		Optional<WorldTag> optionalWorldTag = WorldTag.get(world);
+		Optional<WorldTag> optionalWorldTag = WorldTag.get(properties);
 
 		if (!args.hasAny("tag")) {
-			List<Text> list = new ArrayList<>();
-
 			if (optionalWorldTag.isPresent()) {
-				list.add(Text.of(TextColors.GREEN, "Current Tag: ", TextColors.RESET, optionalWorldTag.get().getTag()));
+				src.sendMessage(Text.of(TextColors.GREEN, "Current Tag: ", TextColors.RESET, optionalWorldTag.get().getTag()));
 			} else {
-				list.add(Text.of(TextColors.GREEN, "Current Tag: ", TextColors.RED, "NONE"));
+				src.sendMessage(Text.of(TextColors.GREEN, "Current Tag: ", TextColors.RED, "NONE"));
 			}
 
-			list.add(Text.of(TextColors.GREEN, "Update Tag: ", TextColors.YELLOW, "/tag world <world> <tag>"));
-
-			if (src instanceof Player) {
-				Builder pages = Sponge.getServiceManager().provide(PaginationService.class).get().builder();
-
-				pages.title(Text.builder().color(TextColors.DARK_GREEN).append(Text.of(TextColors.GREEN, "World")).build());
-
-				pages.contents(list);
-
-				pages.sendTo(src);
-			} else {
-				for (Text text : list) {
-					src.sendMessage(text);
-				}
-			}
+			src.sendMessage(Text.of(TextColors.GREEN, "Update Tag: ", TextColors.YELLOW, "/tag world <world> <tag>"));
 
 			return CommandResult.success();
 		}
@@ -94,10 +56,10 @@ public class CMDWorld implements CommandExecutor {
 			WorldTag worldTag = optionalWorldTag.get();
 			worldTag.setTag(tag);
 		} else {
-			WorldTag.create(world, tag);
+			WorldTag.create(properties, tag);
 		}
 
-		src.sendMessage(Text.of(TextColors.DARK_GREEN, "Tag changed to ", TextSerializers.FORMATTING_CODE.deserialize(tag)));
+		src.sendMessage(Text.of(TextColors.DARK_GREEN, "Tag changed to ", TextColors.RESET, TextSerializers.FORMATTING_CODE.deserialize(tag)));
 
 		return CommandResult.success();
 	}

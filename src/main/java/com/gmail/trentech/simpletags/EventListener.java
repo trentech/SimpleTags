@@ -46,7 +46,7 @@ public class EventListener {
 
 		Text worldTag = Text.EMPTY;
 
-		Optional<WorldTag> optionalWorldTag = WorldTag.get(player.getWorld());
+		Optional<WorldTag> optionalWorldTag = WorldTag.get(player.getWorld().getProperties());
 
 		if (optionalWorldTag.isPresent()) {
 			worldTag = optionalWorldTag.get().getTag();

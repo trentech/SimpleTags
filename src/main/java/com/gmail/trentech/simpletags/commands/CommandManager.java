@@ -10,6 +10,7 @@ import org.spongepowered.api.command.spec.CommandSpec.Builder;
 import org.spongepowered.api.text.Text;
 
 import com.gmail.trentech.simpletags.Main;
+import com.gmail.trentech.simpletags.commands.elements.GroupElement;
 
 public class CommandManager {
 
@@ -24,19 +25,19 @@ public class CommandManager {
 	private CommandSpec cmdTagPlayer = CommandSpec.builder()
 		    .permission("simpletags.cmd.tag.player")
 		    .child(cmdTagDefault, "default", "d")
-		    .arguments(GenericArguments.optional(GenericArguments.string(Text.of("name"))), GenericArguments.optional(GenericArguments.string(Text.of("tag"))))
+		    .arguments(GenericArguments.player(Text.of("player")), GenericArguments.optional(GenericArguments.string(Text.of("tag"))))
 		    .executor(new CMDPlayer())
 		    .build();
 	
 	private CommandSpec cmdTagGroup = CommandSpec.builder()
 		    .permission("simpletags.cmd.tag.group")
-		    .arguments(GenericArguments.optional(GenericArguments.string(Text.of("name"))), GenericArguments.optional(GenericArguments.string(Text.of("tag"))))
+		    .arguments(new GroupElement(Text.of("group")), GenericArguments.optional(GenericArguments.string(Text.of("tag"))))
 		    .executor(new CMDGroup())
 		    .build();
 	
 	private CommandSpec cmdTagWorld = CommandSpec.builder()
 		    .permission("simpletags.cmd.tag.world")
-		    .arguments(GenericArguments.optional(GenericArguments.string(Text.of("name"))), GenericArguments.optional(GenericArguments.string(Text.of("tag"))))
+		    .arguments(GenericArguments.world(Text.of("world")), GenericArguments.optional(GenericArguments.string(Text.of("tag"))))
 		    .executor(new CMDWorld())
 		    .build();
 

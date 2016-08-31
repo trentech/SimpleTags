@@ -6,7 +6,7 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.spongepowered.api.world.World;
+import org.spongepowered.api.world.storage.WorldProperties;
 
 public class WorldTag extends Tag {
 
@@ -20,8 +20,8 @@ public class WorldTag extends Tag {
 		super(tag);
 	}
 
-	public static Optional<WorldTag> get(World world) {
-		String name = world.getName();
+	public static Optional<WorldTag> get(WorldProperties properties) {
+		String name = properties.getWorldName();
 
 		if (cache.containsKey(name)) {
 			return Optional.of(cache.get(name));
@@ -30,8 +30,8 @@ public class WorldTag extends Tag {
 		return Optional.empty();
 	}
 
-	public static Optional<WorldTag> create(World world, String tag) {
-		String name = world.getName();
+	public static Optional<WorldTag> create(WorldProperties properties, String tag) {
+		String name = properties.getWorldName();
 
 		if (cache.containsKey(name)) {
 			return Optional.empty();

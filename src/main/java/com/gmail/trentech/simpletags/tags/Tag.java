@@ -28,8 +28,6 @@ public class Tag extends SQLUtils {
 
 		if (!exists()) {
 			create();
-		} else {
-			update();
 		}
 	}
 
