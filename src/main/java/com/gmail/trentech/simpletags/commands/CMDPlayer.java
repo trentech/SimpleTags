@@ -29,8 +29,7 @@ public class CMDPlayer implements CommandExecutor {
 		Player player = args.<Player> getOne("player").get();
 
 		if (src instanceof Player && !((Player) src).equals(player) && !src.hasPermission("simpletags.cmd.tag.player.others")) {
-			src.sendMessage(Text.of(TextColors.DARK_RED, "You only have permission to tag yourself!"));
-			return CommandResult.empty();
+			throw new CommandException(Text.of(TextColors.RED, "You only have permission to tag yourself!"));
 		}
 
 		Optional<PlayerTag> optionalPlayerTag = PlayerTag.get(player);
