@@ -37,17 +37,16 @@ public class Main {
 	@Inject @ConfigDir(sharedRoot = false)
     private Path path;
 
-	@Inject 
-	private PluginContainer plugin;
-	
 	@Inject
 	private Logger log;
 	private List<Class<? extends Tag>> tags = new ArrayList<>();
 	
+	private static PluginContainer plugin;
 	private static Main instance;
 	
 	@Listener
 	public void onPreInitializationEvent(GamePreInitializationEvent event) {
+		plugin = Sponge.getPluginManager().getPlugin(Resource.ID).get();
 		instance = this;
 		
 		try {			
@@ -84,7 +83,7 @@ public class Main {
 		return log;
 	}
 
-	public PluginContainer getPlugin() {
+	public static PluginContainer getPlugin() {
 		return plugin;
 	}
 
