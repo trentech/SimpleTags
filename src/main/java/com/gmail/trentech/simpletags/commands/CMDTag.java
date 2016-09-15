@@ -25,6 +25,8 @@ public class CMDTag implements CommandExecutor {
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 		List<Text> list = new ArrayList<>();
 
+		list.add(Text.builder().color(TextColors.GREEN).onHover(TextActions.showText(Text.of("Click command to execute "))).onClick(TextActions.runCommand("/simpletags:tag help")).append(Text.of(" /tagr help")).build());
+		
 		for (Entry<CommandSpec, String[]> entry : CommandManager.hash.entrySet()) {
 			String[] aliases = entry.getValue();
 
