@@ -16,6 +16,7 @@ public class CMDServer implements CommandExecutor {
 
 	public CMDServer() {
 		Help help = new Help("server", "server", " View and edit server tag");
+		help.setPermission("simpletags.cmd.tag.server");
 		help.setSyntax(" /tag server <tag>\n /t s <tag>");
 		help.setExample(" /tag server\n /tag server &7[CONSOLE]");
 		help.save();

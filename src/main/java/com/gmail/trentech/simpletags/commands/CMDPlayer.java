@@ -19,6 +19,7 @@ public class CMDPlayer implements CommandExecutor {
 
 	public CMDPlayer() {
 		Help help = new Help("player", "player", " View and edit player tags");
+		help.setPermission("simpletags.cmd.tag.player");
 		help.setSyntax(" /tag player <player> <tag>\n /t p <player> <tag>");
 		help.setExample(" /tag player Notch\n /tag player Notch &e[Notch]\n /tag player @p &e[Me]\n /tag player default &b[%PLAYER%]\n /tag player @p reset");
 		help.save();
@@ -29,7 +30,7 @@ public class CMDPlayer implements CommandExecutor {
 		Player player = args.<Player> getOne("player").get();
 
 		if (src instanceof Player && !((Player) src).equals(player) && !src.hasPermission("simpletags.cmd.tag.player.others")) {
-			throw new CommandException(Text.of(TextColors.RED, "You only have permission to tag yourself!"));
+			throw new CommandException(Text.of(TextColors.RED, "You only have permission to tag yourself!"), false);
 		}
 
 		Optional<PlayerTag> optionalPlayerTag = PlayerTag.get(player);

@@ -9,7 +9,6 @@ import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
-import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.service.pagination.PaginationList;
 import org.spongepowered.api.service.pagination.PaginationList.Builder;
@@ -27,11 +26,11 @@ public class CMDTag implements CommandExecutor {
 
 		list.add(Text.builder().color(TextColors.GREEN).onHover(TextActions.showText(Text.of("Click command to execute "))).onClick(TextActions.runCommand("/simpletags:tag help")).append(Text.of(" /tagr help")).build());
 		
-		for (Entry<CommandSpec, String[]> entry : CommandManager.hash.entrySet()) {
-			String[] aliases = entry.getValue();
+		for (Entry<String, Help> entry : Help.all().entrySet()) {
+			String command = entry.getKey();
 
-			if (src.hasPermission("simpletags.cmd.tag." + aliases[0])) {
-				list.add(Text.builder().color(TextColors.GREEN).onHover(TextActions.showText(Text.of("Click command for more information "))).onClick(TextActions.executeCallback(Help.getHelp(aliases[0]))).append(Text.of(" /tag " + aliases[0])).build());
+			if (src.hasPermission("simpletags.cmd.tag." + command)) {
+				list.add(Text.builder().color(TextColors.GREEN).onHover(TextActions.showText(Text.of("Click command for more information "))).onClick(TextActions.executeCallback(Help.getHelp(command))).append(Text.of(" /tag " + command)).build());
 			}
 		}
 

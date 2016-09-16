@@ -18,6 +18,7 @@ public class CMDGroup implements CommandExecutor {
 
 	public CMDGroup() {
 		Help help = new Help("group", "group", " View and edit group tags");
+		help.setPermission("simpletags.cmd.tag.group");
 		help.setSyntax(" /tag group <group> <tag>\n /t g <group> <tag>");
 		help.setExample(" /tag group admin\n /tag group admin &e[BOSS]\n /tag group admin reset");
 		help.save();

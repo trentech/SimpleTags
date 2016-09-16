@@ -20,6 +20,7 @@ public class Help {
 	private final String id;
 	private final String command;
 	private final String description;
+	private Optional<String> permission = Optional.empty();
 	private Optional<String> syntax = Optional.empty();
 	private Optional<String> example = Optional.empty();
 
@@ -39,6 +40,14 @@ public class Help {
 		return description;
 	}
 
+	public Optional<String> getPermission() {
+		return permission;
+	}
+	
+	public void setPermission(String permission) {
+		this.permission = Optional.of(permission);
+	}
+	
 	public Optional<String> getSyntax() {
 		return syntax;
 	}
@@ -69,6 +78,10 @@ public class Help {
 		list.add(Text.of(TextColors.GREEN, "Description:"));
 		list.add(Text.of(TextColors.WHITE, getDescription()));
 
+		if (getPermission().isPresent()) {
+			list.add(Text.of(TextColors.GREEN, "Permission:"));
+			list.add(Text.of(TextColors.WHITE, getPermission().get()));
+		}
 		if (getSyntax().isPresent()) {
 			list.add(Text.of(TextColors.GREEN, "Syntax:"));
 			list.add(Text.of(TextColors.WHITE, getSyntax().get()));

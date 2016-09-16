@@ -52,10 +52,8 @@ public class GroupElement extends CommandElement {
 			if (group.equalsIgnoreCase("op_0") || group.equalsIgnoreCase("op_1") || group.equalsIgnoreCase("op_2") || group.equalsIgnoreCase("op_3") || group.equalsIgnoreCase("op_4")) {
 				group = "op";
 			}
-
-			//if (group.contains(args.peek().toLowerCase())) {
-				list.add(group);
-			//}
+			
+			list.add(group);
 		}
 		
         return list;
