@@ -2,6 +2,7 @@ package com.gmail.trentech.simpletags.commands;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Map.Entry;
 
 import org.spongepowered.api.command.CommandException;
@@ -24,13 +25,20 @@ public class CMDTag implements CommandExecutor {
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 		List<Text> list = new ArrayList<>();
 
-		list.add(Text.builder().color(TextColors.GREEN).onHover(TextActions.showText(Text.of("Click command to execute "))).onClick(TextActions.runCommand("/simpletags:tag help")).append(Text.of(" /tagr help")).build());
+		list.add(Text.builder().color(TextColors.GREEN).onHover(TextActions.showText(Text.of("Click command to execute "))).onClick(TextActions.runCommand("/simpletags:tag help")).append(Text.of(" /tag help")).build());
 		
 		for (Entry<String, Help> entry : Help.all().entrySet()) {
-			String command = entry.getKey();
-
-			if (src.hasPermission("simpletags.cmd.tag." + command)) {
-				list.add(Text.builder().color(TextColors.GREEN).onHover(TextActions.showText(Text.of("Click command for more information "))).onClick(TextActions.executeCallback(Help.getHelp(command))).append(Text.of(" /tag " + command)).build());
+			String id = entry.getKey();
+			String command = entry.getValue().getCommand();
+			
+			Optional<String> optionalPermission = entry.getValue().getPermission();
+			
+			if(optionalPermission.isPresent()) {
+				if (src.hasPermission(optionalPermission.get())) {
+					list.add(Text.builder().color(TextColors.GREEN).onHover(TextActions.showText(Text.of("Click command for more information "))).onClick(TextActions.executeCallback(Help.getHelp(id))).append(Text.of(" /tag " + command)).build());
+				}
+			} else {
+				list.add(Text.builder().color(TextColors.GREEN).onHover(TextActions.showText(Text.of("Click command for more information "))).onClick(TextActions.executeCallback(Help.getHelp(id))).append(Text.of(" /tag " + command)).build());
 			}
 		}
 
