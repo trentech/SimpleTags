@@ -11,7 +11,7 @@ import org.spongepowered.api.text.Text;
 
 import com.gmail.trentech.simpletags.Main;
 import com.gmail.trentech.simpletags.commands.elements.GroupElement;
-import com.gmail.trentech.simpletags.utils.Help;
+import com.gmail.trentech.simpletags.commands.elements.HelpElement;
 
 public class CommandManager {
 
@@ -51,7 +51,7 @@ public class CommandManager {
 	private CommandSpec cmdHelp = CommandSpec.builder()
 		    .description(Text.of(" I need help with Simple Tags"))
 		    .permission("simpletags.cmd.tag")
-		    .arguments(GenericArguments.choices(Text.of("command"), Help.all()))
+		    .arguments(new HelpElement(Text.of("rawCommand")))
 		    .executor(new CMDHelp())
 		    .build();
 	

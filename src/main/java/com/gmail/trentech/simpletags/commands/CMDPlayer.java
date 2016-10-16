@@ -18,11 +18,11 @@ import com.gmail.trentech.simpletags.utils.Help;
 public class CMDPlayer implements CommandExecutor {
 
 	public CMDPlayer() {
-		Help help = new Help("player", "player", " View and edit player tags");
-		help.setPermission("simpletags.cmd.tag.player");
-		help.setSyntax(" /tag player <player> <tag>\n /t p <player> <tag>");
-		help.setExample(" /tag player Notch\n /tag player Notch &e[Notch]\n /tag player @p &e[Me]\n /tag player default &b[%PLAYER%]\n /tag player @p reset");
-		help.save();
+		new Help("player", "player", "View and edit player tags", false)
+			.setPermission("simpletags.cmd.tag.player")
+			.setUsage("/tag player <player> <tag>\n /t p <player> <tag>")
+			.setExample("/tag player Notch\n /tag player Notch &e[Notch]\n /tag player @p &e[Me]\n /tag player default &b[%PLAYER%]\n /tag player @p reset")
+			.save();
 	}
 
 	@Override

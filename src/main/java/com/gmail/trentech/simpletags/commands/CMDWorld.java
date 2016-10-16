@@ -18,11 +18,11 @@ import com.gmail.trentech.simpletags.utils.Help;
 public class CMDWorld implements CommandExecutor {
 
 	public CMDWorld() {
-		Help help = new Help("world", "world", " View and edit world tags");
-		help.setPermission("simpletags.cmd.tag.world");
-		help.setSyntax(" /tag world <world> <tag>\n /t w <world> <tag>");
-		help.setExample(" /tag world DIM-1\n /tag world DIM-1 &4[NETHER]\n /tag world @w &6[MyWorld]\n /tag world world reset");
-		help.save();
+		new Help("world", "world", "View and edit world tags", false)
+			.setPermission("simpletags.cmd.tag.world")
+			.setUsage("/tag world <world> <tag>\n /t w <world> <tag>")
+			.setExample("/tag world DIM-1\n /tag world DIM-1 &4[NETHER]\n /tag world @w &6[MyWorld]\n /tag world world reset")
+			.save();
 	}
 
 	@Override

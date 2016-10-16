@@ -15,11 +15,11 @@ import com.gmail.trentech.simpletags.utils.Help;
 public class CMDServer implements CommandExecutor {
 
 	public CMDServer() {
-		Help help = new Help("server", "server", " View and edit server tag");
-		help.setPermission("simpletags.cmd.tag.server");
-		help.setSyntax(" /tag server <tag>\n /t s <tag>");
-		help.setExample(" /tag server\n /tag server &7[CONSOLE]");
-		help.save();
+		new Help("server", "server", "View and edit server tag", false)
+			.setPermission("simpletags.cmd.tag.server")
+			.setUsage("/tag server <tag>\n /t s <tag>")
+			.setExample("/tag server\n /tag server &7[CONSOLE]")
+			.save();
 	}
 
 	@Override

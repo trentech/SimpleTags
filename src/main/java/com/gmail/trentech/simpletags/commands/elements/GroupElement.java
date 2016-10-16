@@ -2,6 +2,7 @@ package com.gmail.trentech.simpletags.commands.elements;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandSource;
@@ -37,7 +38,8 @@ public class GroupElement extends CommandElement {
 				return next;
 			}
 		}
-		return args.createError(Text.of(TextColors.RED, "Group not found"));
+		
+		throw args.createError(Text.of(TextColors.RED, "Group not found"));
     }
 
     @Override
@@ -46,21 +48,37 @@ public class GroupElement extends CommandElement {
     	
     	PermissionService permissionService = Sponge.getServiceManager().provide(PermissionService.class).get();
         
-		for (Subject subject : permissionService.getGroupSubjects().getAllSubjects()) {
-			String group = subject.getIdentifier();
+    	Optional<String> next = args.nextIfPresent();
+    	
+    	if(next.isPresent()) {
+    		for (Subject subject : permissionService.getGroupSubjects().getAllSubjects()) {
+    			String group = subject.getIdentifier();
 
-			if (group.equalsIgnoreCase("op_0") || group.equalsIgnoreCase("op_1") || group.equalsIgnoreCase("op_2") || group.equalsIgnoreCase("op_3") || group.equalsIgnoreCase("op_4")) {
-				group = "op";
-			}
-			
-			list.add(group);
-		}
+    			if (group.equalsIgnoreCase("op_0") || group.equalsIgnoreCase("op_1") || group.equalsIgnoreCase("op_2") || group.equalsIgnoreCase("op_3") || group.equalsIgnoreCase("op_4")) {
+    				group = "op";
+    			}
+    			
+            	if(group.startsWith(args.getRaw())) {
+            		list.add(group);
+            	}
+    		}
+    	} else {
+    		for (Subject subject : permissionService.getGroupSubjects().getAllSubjects()) {
+    			String group = subject.getIdentifier();
+
+    			if (group.equalsIgnoreCase("op_0") || group.equalsIgnoreCase("op_1") || group.equalsIgnoreCase("op_2") || group.equalsIgnoreCase("op_3") || group.equalsIgnoreCase("op_4")) {
+    				group = "op";
+    			}
+
+            	list.add(group);
+    		}
+    	}
 		
         return list;
     }
 
     @Override
     public Text getUsage(CommandSource src) {
-        return Text.of(getKey().getColor(), "<" + getKey(), ">");
+        return Text.of(getKey());
     }
 }
