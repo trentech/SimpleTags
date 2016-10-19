@@ -58,7 +58,7 @@ public class GroupElement extends CommandElement {
     				group = "op";
     			}
     			
-            	if(group.startsWith(args.getRaw())) {
+            	if(group.startsWith(next.get())) {
             		list.add(group);
             	}
     		}

@@ -83,7 +83,7 @@ public class Main {
 			
 			Help tagServer = new Help("tag server", "server", "View and edit server tag")
 					.setPermission("simpletags.cmd.tag.server")
-					.addUsage("/tag server <tag>\n /t s <tag>")
+					.addUsage("/tag server <tag>")
 					.addUsage("/t s <tag>")
 					.addExample("/tag server")
 					.addExample("/tag server &7[CONSOLE]");
