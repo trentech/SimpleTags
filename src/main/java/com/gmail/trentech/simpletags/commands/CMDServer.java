@@ -10,17 +10,8 @@ import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.serializer.TextSerializers;
 
 import com.gmail.trentech.simpletags.tags.PlayerTag;
-import com.gmail.trentech.simpletags.utils.Help;
 
 public class CMDServer implements CommandExecutor {
-
-	public CMDServer() {
-		new Help("server", "server", "View and edit server tag", false)
-			.setPermission("simpletags.cmd.tag.server")
-			.setUsage("/tag server <tag>\n /t s <tag>")
-			.setExample("/tag server\n /tag server &7[CONSOLE]")
-			.save();
-	}
 
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {

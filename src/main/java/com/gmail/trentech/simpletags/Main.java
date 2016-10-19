@@ -18,6 +18,7 @@ import org.spongepowered.api.plugin.Dependency;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginContainer;
 
+import com.gmail.trentech.helpme.Help;
 import com.gmail.trentech.simpletags.commands.CommandManager;
 import com.gmail.trentech.simpletags.tags.GroupTag;
 import com.gmail.trentech.simpletags.tags.PlayerTag;
@@ -31,7 +32,7 @@ import com.google.inject.Inject;
 import me.flibio.updatifier.Updatifier;
 
 @Updatifier(repoName = Resource.NAME, repoOwner = Resource.AUTHOR, version = Resource.VERSION)
-@Plugin(id = Resource.ID, name = Resource.NAME, version = Resource.VERSION, description = Resource.DESCRIPTION, authors = Resource.AUTHOR, url = Resource.URL, dependencies = { @Dependency(id = "Updatifier", optional = true) })
+@Plugin(id = Resource.ID, name = Resource.NAME, version = Resource.VERSION, description = Resource.DESCRIPTION, authors = Resource.AUTHOR, url = Resource.URL, dependencies = { @Dependency(id = "Updatifier", optional = true), @Dependency(id = "helpme", optional = true) })
 public class Main {
 
 	@Inject @ConfigDir(sharedRoot = false)
@@ -62,6 +63,48 @@ public class Main {
 		registerTag(PlayerTag.class);
 		registerTag(WorldTag.class);
 		registerTag(SingleTag.class);
+		
+		if(Sponge.getPluginManager().getPlugin("helpme").isPresent()) {
+			Help tagGroup = new Help("tag group", "group", "View and edit group tags")
+					.setPermission("simpletags.cmd.tag.group")
+					.addUsage("/tag group <group> <tag>")
+					.addUsage("/t g <group> <tag>")
+					.addExample("/tag group admin")
+					.addExample("/tag group admin &e[BOSS]")
+					.addExample("/tag group admin reset");				
+			
+			Help tagPlayer = new Help("tag player", "player", "View and edit player tags")
+					.setPermission("simpletags.cmd.tag.player")
+					.addUsage("/tag player <player> <tag>")
+					.addUsage("/t p <player> <tag>")
+					.addExample("/tag player Notch")
+					.addExample("/tag player Notch &e[Notch]")
+					.addExample("/tag player default &b[%PLAYER%]");
+			
+			Help tagServer = new Help("tag server", "server", "View and edit server tag")
+					.setPermission("simpletags.cmd.tag.server")
+					.addUsage("/tag server <tag>\n /t s <tag>")
+					.addUsage("/t s <tag>")
+					.addExample("/tag server")
+					.addExample("/tag server &7[CONSOLE]");
+			
+			Help tagWorld = new Help("tag world", "world", "View and edit world tags")
+					.setPermission("simpletags.cmd.tag.world")
+					.addUsage("/tag world <world> <tag>")
+					.addUsage("/t w <world> <tag>")
+					.addExample("/tag world DIM-1")
+					.addExample("/tag world DIM-1 &4[NETHER]")
+					.addExample("/tag world world reset");
+			
+			Help tag = new Help("tag", "tag", "Base SimpleTags command")
+					.setPermission("simpletags.cmd.tag")
+					.addChild(tagWorld)
+					.addChild(tagServer)
+					.addChild(tagPlayer)
+					.addChild(tagGroup);
+			
+			Help.register(tag);			
+		}
 	}
 
 	@Listener

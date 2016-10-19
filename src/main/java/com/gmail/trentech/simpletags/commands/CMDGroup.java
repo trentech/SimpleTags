@@ -12,17 +12,8 @@ import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.serializer.TextSerializers;
 
 import com.gmail.trentech.simpletags.tags.GroupTag;
-import com.gmail.trentech.simpletags.utils.Help;
 
 public class CMDGroup implements CommandExecutor {
-
-	public CMDGroup() {
-		new Help("group", "group", "View and edit group tags", false)
-			.setPermission("simpletags.cmd.tag.group")
-			.setUsage("/tag group <group> <tag>\n /t g <group> <tag>")
-			.setExample("/tag group admin\n /tag group admin &e[BOSS]\n /tag group admin reset")
-			.save();
-	}
 
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {

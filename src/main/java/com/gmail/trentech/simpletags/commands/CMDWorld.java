@@ -13,17 +13,8 @@ import org.spongepowered.api.text.serializer.TextSerializers;
 import org.spongepowered.api.world.storage.WorldProperties;
 
 import com.gmail.trentech.simpletags.tags.WorldTag;
-import com.gmail.trentech.simpletags.utils.Help;
 
 public class CMDWorld implements CommandExecutor {
-
-	public CMDWorld() {
-		new Help("world", "world", "View and edit world tags", false)
-			.setPermission("simpletags.cmd.tag.world")
-			.setUsage("/tag world <world> <tag>\n /t w <world> <tag>")
-			.setExample("/tag world DIM-1\n /tag world DIM-1 &4[NETHER]\n /tag world @w &6[MyWorld]\n /tag world world reset")
-			.save();
-	}
 
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {

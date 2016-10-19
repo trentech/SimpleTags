@@ -13,17 +13,8 @@ import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.serializer.TextSerializers;
 
 import com.gmail.trentech.simpletags.tags.PlayerTag;
-import com.gmail.trentech.simpletags.utils.Help;
 
 public class CMDPlayer implements CommandExecutor {
-
-	public CMDPlayer() {
-		new Help("player", "player", "View and edit player tags", false)
-			.setPermission("simpletags.cmd.tag.player")
-			.setUsage("/tag player <player> <tag>\n /t p <player> <tag>")
-			.setExample("/tag player Notch\n /tag player Notch &e[Notch]\n /tag player @p &e[Me]\n /tag player default &b[%PLAYER%]\n /tag player @p reset")
-			.save();
-	}
 
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
