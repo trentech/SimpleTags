@@ -55,14 +55,6 @@ public class Main {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}
-
-	@Listener
-	public void onInitializationEvent(GameInitializationEvent event) {
-		registerTag(GroupTag.class);
-		registerTag(PlayerTag.class);
-		registerTag(WorldTag.class);
-		registerTag(SingleTag.class);
 		
 		if (Sponge.getPluginManager().isLoaded("helpme")) {
 			Help tagGroup = new Help("tag group", "group", "View and edit group tags")
@@ -105,6 +97,14 @@ public class Main {
 			
 			Help.register(tag);			
 		}
+	}
+
+	@Listener
+	public void onInitializationEvent(GameInitializationEvent event) {
+		registerTag(GroupTag.class);
+		registerTag(PlayerTag.class);
+		registerTag(WorldTag.class);
+		registerTag(SingleTag.class);
 	}
 
 	@Listener
