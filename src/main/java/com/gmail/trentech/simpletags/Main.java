@@ -64,7 +64,7 @@ public class Main {
 		registerTag(WorldTag.class);
 		registerTag(SingleTag.class);
 		
-		if(Sponge.getPluginManager().getPlugin("helpme").isPresent()) {
+		if (Sponge.getPluginManager().isLoaded("helpme")) {
 			Help tagGroup = new Help("tag group", "group", "View and edit group tags")
 					.setPermission("simpletags.cmd.tag.group")
 					.addUsage("/tag group <group> <tag>")
