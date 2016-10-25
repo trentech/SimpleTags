@@ -38,7 +38,7 @@ configurations {
 dependencies {
     compile "org.spongepowered:spongeapi:${project.apiVersion}"
     shade "com.github.Flibio:Updatifier:-SNAPSHOT:api"
-    compile "com.github.TrenTech:HelpMe:be2880c0d4"
+    compile "com.github.TrenTech:HelpMe:0.2.1"
 }
 
 jar {
