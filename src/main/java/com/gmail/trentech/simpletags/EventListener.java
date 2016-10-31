@@ -6,7 +6,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.spongepowered.api.Sponge;
-import org.spongepowered.api.command.source.ConsoleSource;
+import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.Order;
@@ -72,22 +72,43 @@ public class EventListener {
 
 		MessageFormatter formatter = event.getFormatter();
 
-		Text old = TextSerializers.FORMATTING_CODE.deserialize(TextSerializers.FORMATTING_CODE.serialize(formatter.getHeader().toText()).replace("<" + player.getName() + ">", ""));
+		String oldStr = TextSerializers.FORMATTING_CODE.serialize(formatter.getHeader().toText());
+		
+		String name = oldStr.substring(oldStr.indexOf("<"), oldStr.lastIndexOf(">") + 1);
+		
+		Text old = TextSerializers.FORMATTING_CODE.deserialize(oldStr.replace(name, ""));
 
 		formatter.setHeader(TextTemplate.of(worldTag, groupTagBuilder.build(), playerTag.build(), old, TextColors.RESET));
 	}
 
 	@Listener
-	public void onSendCommandEvent(SendCommandEvent event, @First ConsoleSource sender) {
+	public void onSendCommandEvent(SendCommandEvent event, @First CommandSource src) {
 		String command = event.getCommand();
 		if (!command.equalsIgnoreCase("say")) {
 			return;
 		}
 
 		Text message = TextSerializers.FORMATTING_CODE.deserialize(event.getArguments());
-		Text consoleTag = PlayerTag.getConsole().get().getTag();
+		
+		if(src instanceof Player) {
+			Player player = (Player) src;
+			
+			Optional<PlayerTag> optionalPlayerTag = PlayerTag.get(player);
 
-		Sponge.getServer().getBroadcastChannel().send(Text.of(consoleTag, ": ", message));
+			if (optionalPlayerTag.isPresent()) {
+				Sponge.getServer().getBroadcastChannel().send(Text.of(optionalPlayerTag.get().getTag(), " ", message));
+			} else {
+				Sponge.getServer().getBroadcastChannel().send(Text.of(PlayerTag.getDefault(player), " ", message));
+			}
+		} else {
+			Optional<SingleTag> optionalTag = SingleTag.get(Main.getPlugin().getId(), "console");
+			
+			if(optionalTag.isPresent()) {
+				Sponge.getServer().getBroadcastChannel().send(Text.of(optionalTag.get().getTag(), " ", message));
+			} else {
+				Sponge.getServer().getBroadcastChannel().send(Text.of(message));
+			}
+		}
 
 		event.setCancelled(true);
 	}

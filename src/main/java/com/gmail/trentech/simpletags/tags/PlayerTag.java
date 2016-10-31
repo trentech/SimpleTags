@@ -75,28 +75,9 @@ public class PlayerTag extends Tag {
 		return Optional.empty();
 	}
 
-	public static Optional<PlayerTag> getConsole() {
-		if (cache.containsKey("simpletags.CONSOLE")) {
-			return Optional.of(cache.get("simpletags.CONSOLE"));
-		}
-
-		return Optional.empty();
-	}
-
 	private static void createDefault() {
 		String name = "simpletags.DEFAULT";
 		String tag = "&6[%PLAYER%]";
-
-		if (cache.containsKey(name)) {
-			return;
-		}
-
-		create(name, tag);
-	}
-
-	private static void createConsole() {
-		String name = "simpletags.CONSOLE";
-		String tag = "&6[CONSOLE]";
 
 		if (cache.containsKey(name)) {
 			return;
@@ -114,7 +95,6 @@ public class PlayerTag extends Tag {
 
 		cache = hash;
 
-		createConsole();
 		createDefault();
 	}
 }
