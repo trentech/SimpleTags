@@ -81,7 +81,7 @@ public class EventListener {
 		
 		String name = oldStr.substring(oldStr.indexOf("<"), oldStr.lastIndexOf(">") + 1);
 		
-		Text old = TextSerializers.FORMATTING_CODE.deserialize(oldStr.replace(name, ""));
+		Text old = TextSerializers.FORMATTING_CODE.deserialize(oldStr.replace(name, "").replaceFirst(player.getName(), ""));
 
 		formatter.setHeader(TextTemplate.of(worldTag, groupTagBuilder.build(), playerTag.build(), old, TextColors.RESET));
 	}
