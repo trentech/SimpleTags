@@ -3,6 +3,9 @@ package com.gmail.trentech.simpletags;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,21 +21,22 @@ import org.spongepowered.api.plugin.Dependency;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginContainer;
 
+import com.gmail.trentech.pjc.core.ConfigManager;
+import com.gmail.trentech.pjc.core.SQLManager;
 import com.gmail.trentech.simpletags.commands.CommandManager;
+import com.gmail.trentech.simpletags.init.Common;
 import com.gmail.trentech.simpletags.tags.GroupTag;
 import com.gmail.trentech.simpletags.tags.PlayerTag;
 import com.gmail.trentech.simpletags.tags.SingleTag;
 import com.gmail.trentech.simpletags.tags.Tag;
 import com.gmail.trentech.simpletags.tags.WorldTag;
-import com.gmail.trentech.simpletags.utils.CommandHelp;
 import com.gmail.trentech.simpletags.utils.Resource;
-import com.gmail.trentech.simpletags.utils.SQLUtils;
 import com.google.inject.Inject;
 
 import me.flibio.updatifier.Updatifier;
 
 @Updatifier(repoName = Resource.NAME, repoOwner = Resource.AUTHOR, version = Resource.VERSION)
-@Plugin(id = Resource.ID, name = Resource.NAME, version = Resource.VERSION, description = Resource.DESCRIPTION, authors = Resource.AUTHOR, url = Resource.URL, dependencies = { @Dependency(id = "Updatifier", optional = true), @Dependency(id = "helpme", version = "0.2.1", optional = true) })
+@Plugin(id = Resource.ID, name = Resource.NAME, version = Resource.VERSION, description = Resource.DESCRIPTION, authors = Resource.AUTHOR, url = Resource.URL, dependencies = { @Dependency(id = "Updatifier", optional = true), @Dependency(id = "pjc", optional = false) })
 public class Main {
 
 	@Inject @ConfigDir(sharedRoot = false)
@@ -56,7 +60,7 @@ public class Main {
 			e.printStackTrace();
 		}
 		
-		CommandHelp.init();
+		Common.initHelp();
 	}
 
 	@Listener
@@ -65,6 +69,8 @@ public class Main {
 		registerTag(PlayerTag.class);
 		registerTag(WorldTag.class);
 		registerTag(SingleTag.class);
+		
+		Common.initConfig(Main.getPlugin().getId());
 	}
 
 	@Listener
@@ -73,7 +79,19 @@ public class Main {
 		Sponge.getCommandManager().register(this, new CommandManager().getCmd(), "tag", "t");
 
 		for (Class<? extends Tag> clazz : tags) {
-			SQLUtils.createTable(clazz.getSimpleName());
+			try {
+				String database = ConfigManager.get(Main.getPlugin()).getConfig().getNode("settings", "sql", "database").getString();
+
+				SQLManager sqlManager = SQLManager.get(Main.getPlugin(), database);
+				Connection connection = sqlManager.getDataSource().getConnection();
+
+				PreparedStatement statement = connection.prepareStatement("CREATE TABLE IF NOT EXISTS " + clazz.getSimpleName() + " (Name TEXT, Tag TEXT)");
+				statement.executeUpdate();
+
+				connection.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 
 		GroupTag.init();

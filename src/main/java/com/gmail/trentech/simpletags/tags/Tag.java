@@ -12,10 +12,12 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.serializer.TextSerializers;
 
+import com.gmail.trentech.pjc.core.ConfigManager;
+import com.gmail.trentech.pjc.core.SQLManager;
+import com.gmail.trentech.simpletags.Main;
 import com.gmail.trentech.simpletags.events.ChangeTagEvent;
-import com.gmail.trentech.simpletags.utils.SQLUtils;
 
-public class Tag extends SQLUtils {
+public class Tag {
 
 	private String name;
 	private final String type;
@@ -61,7 +63,10 @@ public class Tag extends SQLUtils {
 
 	private void create() {
 		try {
-			Connection connection = getDataSource().getConnection();
+			String database = ConfigManager.get(Main.getPlugin()).getConfig().getNode("settings", "sql", "database").getString();
+
+			SQLManager sqlManager = SQLManager.get(Main.getPlugin(), database);
+			Connection connection = sqlManager.getDataSource().getConnection();
 
 			PreparedStatement statement = connection.prepareStatement("INSERT into " + getType() + " (Name, Tag) VALUES (?, ?)");
 
@@ -80,7 +85,10 @@ public class Tag extends SQLUtils {
 
 	private void update() {
 		try {
-			Connection connection = getDataSource().getConnection();
+			String database = ConfigManager.get(Main.getPlugin()).getConfig().getNode("settings", "sql", "database").getString();
+
+			SQLManager sqlManager = SQLManager.get(Main.getPlugin(), database);
+			Connection connection = sqlManager.getDataSource().getConnection();
 
 			PreparedStatement statement = connection.prepareStatement("UPDATE " + getType() + " SET Tag = ? WHERE Name = ?");
 
@@ -99,7 +107,10 @@ public class Tag extends SQLUtils {
 
 	private void delete() {
 		try {
-			Connection connection = getDataSource().getConnection();
+			String database = ConfigManager.get(Main.getPlugin()).getConfig().getNode("settings", "sql", "database").getString();
+
+			SQLManager sqlManager = SQLManager.get(Main.getPlugin(), database);
+			Connection connection = sqlManager.getDataSource().getConnection();
 
 			PreparedStatement statement = connection.prepareStatement("DELETE from " + getType() + " WHERE Name = ?");
 
@@ -116,7 +127,10 @@ public class Tag extends SQLUtils {
 
 	private boolean exists() {
 		try {
-			Connection connection = getDataSource().getConnection();
+			String database = ConfigManager.get(Main.getPlugin()).getConfig().getNode("settings", "sql", "database").getString();
+
+			SQLManager sqlManager = SQLManager.get(Main.getPlugin(), database);
+			Connection connection = sqlManager.getDataSource().getConnection();
 
 			PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + getType());
 
@@ -141,7 +155,10 @@ public class Tag extends SQLUtils {
 		String type = clazz.getSimpleName();
 
 		try {
-			Connection connection = getDataSource().getConnection();
+			String database = ConfigManager.get(Main.getPlugin()).getConfig().getNode("settings", "sql", "database").getString();
+
+			SQLManager sqlManager = SQLManager.get(Main.getPlugin(), database);
+			Connection connection = sqlManager.getDataSource().getConnection();
 
 			PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + type);
 
@@ -169,7 +186,10 @@ public class Tag extends SQLUtils {
 		List<Tag> list = new ArrayList<>();
 
 		try {
-			Connection connection = getDataSource().getConnection();
+			String database = ConfigManager.get(Main.getPlugin()).getConfig().getNode("settings", "sql", "database").getString();
+
+			SQLManager sqlManager = SQLManager.get(Main.getPlugin(), database);
+			Connection connection = sqlManager.getDataSource().getConnection();
 
 			PreparedStatement statement = connection.prepareStatement("SELECT * FROM " + type);
 
