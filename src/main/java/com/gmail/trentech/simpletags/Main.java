@@ -21,7 +21,6 @@ import org.spongepowered.api.plugin.Dependency;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginContainer;
 
-import com.gmail.trentech.pjc.core.ConfigManager;
 import com.gmail.trentech.pjc.core.SQLManager;
 import com.gmail.trentech.simpletags.commands.CommandManager;
 import com.gmail.trentech.simpletags.init.Common;
@@ -80,9 +79,7 @@ public class Main {
 
 		for (Class<? extends Tag> clazz : tags) {
 			try {
-				String database = ConfigManager.get(Main.getPlugin()).getConfig().getNode("settings", "sql", "database").getString();
-
-				SQLManager sqlManager = SQLManager.get(Main.getPlugin(), database);
+				SQLManager sqlManager = SQLManager.get(Main.getPlugin());
 				Connection connection = sqlManager.getDataSource().getConnection();
 
 				PreparedStatement statement = connection.prepareStatement("CREATE TABLE IF NOT EXISTS " + clazz.getSimpleName() + " (Name TEXT, Tag TEXT)");
