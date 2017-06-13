@@ -9,12 +9,20 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.serializer.TextSerializers;
 
+import com.gmail.trentech.pjc.help.Help;
 import com.gmail.trentech.simpletags.tags.PlayerTag;
 
 public class CMDDefault implements CommandExecutor {
 
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
+		Help help = Help.get("tag player default").get();
+		
+		if (args.hasAny("help")) {		
+			help.execute(src);
+			return CommandResult.empty();
+		}
+		
 		PlayerTag defaultTag = PlayerTag.getDefault().get();
 
 		if (!args.hasAny("tag")) {

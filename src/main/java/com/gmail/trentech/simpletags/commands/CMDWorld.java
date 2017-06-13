@@ -12,12 +12,20 @@ import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.serializer.TextSerializers;
 import org.spongepowered.api.world.storage.WorldProperties;
 
+import com.gmail.trentech.pjc.help.Help;
 import com.gmail.trentech.simpletags.tags.WorldTag;
 
 public class CMDWorld implements CommandExecutor {
 
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
+		Help help = Help.get("tag world").get();
+		
+		if (args.hasAny("help")) {		
+			help.execute(src);
+			return CommandResult.empty();
+		}
+		
 		WorldProperties properties = args.<WorldProperties> getOne("world").get();
 
 		Optional<WorldTag> optionalWorldTag = WorldTag.get(properties);

@@ -22,7 +22,7 @@ import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginContainer;
 
 import com.gmail.trentech.pjc.core.SQLManager;
-import com.gmail.trentech.simpletags.commands.CommandManager;
+import com.gmail.trentech.simpletags.init.Commands;
 import com.gmail.trentech.simpletags.init.Common;
 import com.gmail.trentech.simpletags.tags.GroupTag;
 import com.gmail.trentech.simpletags.tags.PlayerTag;
@@ -75,7 +75,7 @@ public class Main {
 	@Listener
 	public void onPostInitializationEvent(GamePostInitializationEvent event) {
 		Sponge.getEventManager().registerListeners(this, new EventListener());
-		Sponge.getCommandManager().register(this, new CommandManager().getCmd(), "tag", "t");
+		Sponge.getCommandManager().register(this, new Commands().getCmd(), "tag", "t");
 
 		for (Class<? extends Tag> clazz : tags) {
 			try {
@@ -114,6 +114,6 @@ public class Main {
 	}
 
 	public static void registerCommand(CommandSpec spec, String... aliases) {
-		CommandManager.hash.put(spec, aliases);
+		Commands.hash.put(spec, aliases);
 	}
 }

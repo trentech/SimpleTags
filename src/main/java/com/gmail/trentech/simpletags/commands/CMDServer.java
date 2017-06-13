@@ -11,6 +11,7 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.serializer.TextSerializers;
 
+import com.gmail.trentech.pjc.help.Help;
 import com.gmail.trentech.simpletags.Main;
 import com.gmail.trentech.simpletags.tags.SingleTag;
 
@@ -18,6 +19,13 @@ public class CMDServer implements CommandExecutor {
 
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
+		Help help = Help.get("tag server").get();
+		
+		if (args.hasAny("help")) {		
+			help.execute(src);
+			return CommandResult.empty();
+		}
+		
 		Optional<SingleTag> optionalTag = SingleTag.get(Main.getPlugin().getId(), "console");
 
 		if (!args.hasAny("tag")) {
