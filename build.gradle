@@ -6,7 +6,7 @@ plugins {
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-archivesBaseName = "${project.id}-${project.apiVersion.split("-")[0]}"
+archivesBaseName = "simpletags-${project.apiVersion.split("-")[0]}"
 
 repositories {
     mavenCentral()
@@ -38,7 +38,7 @@ configurations {
 dependencies {
     compile "org.spongepowered:spongeapi:${project.apiVersion}"
     shade "com.github.Flibio:Updatifier:-SNAPSHOT:api"
-    compile 'com.github.trentech:ProjectCore:6.x-SNAPSHOT'
+    compile 'com.github.trentech:ProjectCore:7.x-SNAPSHOT'
 }
 
 jar {
