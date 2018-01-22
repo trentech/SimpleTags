@@ -43,6 +43,8 @@ dependencies {
 
 signing {
     sign configurations.archives
+    shade "com.github.Flibio:Updatifier:-SNAPSHOT:api"
+    compile 'com.github.trentech:ProjectCore:7.x-SNAPSHOT'
 }
 
 jar {
