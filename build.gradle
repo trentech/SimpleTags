@@ -1,12 +1,13 @@
 plugins {
   id 'maven'
   id 'ninja.miserable.blossom' version '1.0.1'
+  id 'signing'
 }
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-archivesBaseName = "${project.id}-${project.apiVersion.split("-")[0]}"
+archivesBaseName = "simpletags-${project.apiVersion.split("-")[0]}"
 
 repositories {
     mavenCentral()
@@ -37,8 +38,11 @@ configurations {
 
 dependencies {
     compile "org.spongepowered:spongeapi:${project.apiVersion}"
-    shade "com.github.Flibio:Updatifier:-SNAPSHOT:api"
-    compile 'com.github.TrenTech:ProjectCore:6.x-SNAPSHOT'
+    compile 'com.github.TrenTech:ProjectCore:7.x-SNAPSHOT'
+}
+
+signing {
+    sign configurations.archives
 }
 
 jar {

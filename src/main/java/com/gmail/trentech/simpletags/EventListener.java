@@ -16,7 +16,7 @@ import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.event.message.MessageChannelEvent;
 import org.spongepowered.api.event.message.MessageEvent.MessageFormatter;
 import org.spongepowered.api.service.context.Context;
-import org.spongepowered.api.service.permission.Subject;
+import org.spongepowered.api.service.permission.SubjectReference;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.Text.Builder;
 import org.spongepowered.api.text.TextTemplate;
@@ -59,9 +59,9 @@ public class EventListener {
 
 		Builder groupTagBuilder = Text.builder();
 
-		for (Entry<Set<Context>, List<Subject>> parent : player.getSubjectData().getAllParents().entrySet()) {
-			for (Subject subject : parent.getValue()) {
-				String group = subject.getIdentifier();
+		for (Entry<Set<Context>, List<SubjectReference>> parent : player.getSubjectData().getAllParents().entrySet()) {
+			for (SubjectReference subject : parent.getValue()) {
+				String group = subject.getSubjectIdentifier();
 
 				if (group.equalsIgnoreCase("op_0") || group.equalsIgnoreCase("op_1") || group.equalsIgnoreCase("op_2") || group.equalsIgnoreCase("op_3") || group.equalsIgnoreCase("op_4")) {
 					group = "op";

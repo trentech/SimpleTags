@@ -27,7 +27,7 @@ public class GroupElement extends CommandElement {
 
         PermissionService permissionService = Sponge.getServiceManager().provide(PermissionService.class).get();
         
-		for (Subject subject : permissionService.getGroupSubjects().getAllSubjects()) {
+		for (Subject subject : permissionService.getGroupSubjects().getLoadedSubjects()) {
 			String group = subject.getIdentifier();
 
 			if (group.equalsIgnoreCase("op_0") || group.equalsIgnoreCase("op_1") || group.equalsIgnoreCase("op_2") || group.equalsIgnoreCase("op_3") || group.equalsIgnoreCase("op_4")) {
@@ -51,7 +51,7 @@ public class GroupElement extends CommandElement {
     	Optional<String> next = args.nextIfPresent();
     	
     	if(next.isPresent()) {
-    		for (Subject subject : permissionService.getGroupSubjects().getAllSubjects()) {
+    		for (Subject subject : permissionService.getGroupSubjects().getLoadedSubjects()) {
     			String group = subject.getIdentifier();
 
     			if (group.equalsIgnoreCase("op_0") || group.equalsIgnoreCase("op_1") || group.equalsIgnoreCase("op_2") || group.equalsIgnoreCase("op_3") || group.equalsIgnoreCase("op_4")) {
@@ -63,7 +63,7 @@ public class GroupElement extends CommandElement {
             	}
     		}
     	} else {
-    		for (Subject subject : permissionService.getGroupSubjects().getAllSubjects()) {
+    		for (Subject subject : permissionService.getGroupSubjects().getLoadedSubjects()) {
     			String group = subject.getIdentifier();
 
     			if (group.equalsIgnoreCase("op_0") || group.equalsIgnoreCase("op_1") || group.equalsIgnoreCase("op_2") || group.equalsIgnoreCase("op_3") || group.equalsIgnoreCase("op_4")) {
